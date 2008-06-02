@@ -7,78 +7,26 @@
 require drupal_get_path('module', 'mobile_codes') .'/mobile_codes.filter.inc';
 
 /**
- * Generate a mobile code
+ * @addtogroup hooks
+ * @{
  */
-function mobile_codes_generate($data, $arguments = array(), $format='') {
-  if (!$arguments['data']) {
-    $arguments['data'] = variable_get('mobile_codes_data_'. $format, 'link');
-  }
-  switch ($arguments['data']) {
-    case 'link': case 'text':
-      $mode = 'TEXT';
-      break;
-
-    case 'phone':
-      $mode = 'NUMBER';
-      break;
-
-    default:
-      $arguments['data'] = 'link';
-      $mode = 'TEXT';
-      break;
-  }
-
-  if (!$arguments['size']) {
-    $arguments['size'] = variable_get('mobile_codes_size_'. $format, 'm');
-  }
-  switch (drupal_strtolower($arguments['size'])) {
-    case 's': case 'sml': case 'small':
-      $arguments['size'] = array('dm' => '0.12', 'qr' => '2');
-      break;
-
-    case 'm': case 'med': case 'medium':
-    default:
-      $arguments['size'] = array('dm' => '0.18', 'qr' => '4');
-      break;
-
-    case 'l': case 'lrg': case 'large':
-      $arguments['size'] = array('dm' => '0.24', 'qr' => '6');
-      break;
-  }
-
-  if (!$arguments['type']) {
-    $arguments['type'] = variable_get('mobile_codes_type_'. $format, 'dm');
-  }
-  switch ($arguments['type']) {
-    case 'dm':
-    default:
-      $text = array('data' => 'BARCODE', 'size' => 'X', 'margin_encoding' => '');
-      break;
-
-    case 'qr':
-      $text = array('data' => 'DATA', 'size' => 'MODULE_SIZE', 'margin_encoding' => '&MARGIN=2&ENCODING=BYTE');
-      break;
-  }
-
-  if (!$arguments['tinyurl']) {
-    $arguments['tinyurl'] = variable_get('mobile_codes_tinyurl_'. $format, 0);
-  }
-  if ($arguments['data'] == 'link' && ($arguments['tinyurl'] == 1 || drupal_strlen($data) > 60)) {
-    $headers = array('Content-type' => 'application/x-www-form-urlencoded');
-    $tinyurl = drupal_http_request('http://tinyurl.com/api-create.php?url='. urlencode($data), $headers, 'POST', NULL);
-    if ($tinyurl->code == 200) {
-      $data = $tinyurl->data;
-    }
-  }
-
-  $output = '<img src="http://mobilecodes.nokia.com/'. $arguments['type'] .'?'
-    . $text['data'] .'='. urlencode($data) .'&'. $text['size'] .'='. $arguments['size'][$arguments['type']]
-    .'&name='. $name . $text['margin_encoding'] .'&type='. $arguments['data']
-    .'&MODE='. $mode .'&a=view" alt="'. $name .'" />';
-
-  return $output;
+/**
+ * Implementation of hook_theme().
+ */
+function mobile_codes_theme() {
+  return array(
+    'mobile_codes_default' => array(
+      'arguments' => array('element' => NULL),
+    ),
+  );
 }
+/**
+ * @} End of "addtogroup hooks".
+ */
 
+/**
+ * Mobile Codes settings form.
+ */
 function mobile_codes_settings($format) {
   $form['mobile_codes_type_'. $format] = array(
     '#type' => 'select',
@@ -121,4 +69,105 @@ function mobile_codes_settings($format) {
   );
 
   return $form;
+}
+
+/**
+ * Generate a mobile code
+ */
+function mobile_codes_generate($data, $arguments=array(), $format='') {
+  if (!$arguments['data']) {
+    $arguments['data'] = variable_get('mobile_codes_data_'. $format, 'link');
+  }
+
+  if (!$arguments['size']) {
+    $arguments['size'] = variable_get('mobile_codes_size_'. $format, 'm');
+  }
+
+  if (!$arguments['type']) {
+    $arguments['type'] = variable_get('mobile_codes_type_'. $format, 'dm');
+  }
+
+  $dir = '/mobile_codes/'. $arguments['type'] .'/'. $arguments['data'] .'/'.  $arguments['size'];
+  $file = file_directory_path() . $dir .'/'. urlencode($data) .'.png';
+  $image_path  = file_directory_path() . $dir .'/'. urlencode(urlencode($data)) .'.png';
+
+
+  if (!file_exists(''. $file)) {
+    switch ($arguments['data']) {
+      case 'link': case 'text':
+        $mode = 'TEXT';
+        break;
+
+      case 'phone':
+        $mode = 'NUMBER';
+        break;
+
+      default:
+        $arguments['data'] = 'link';
+        $mode = 'TEXT';
+        break;
+    }
+
+    switch (drupal_strtolower($arguments['size'])) {
+      case 's': case 'sml': case 'small':
+        $arguments['size'] = array('dm' => '0.12', 'qr' => '2');
+        break;
+
+      case 'm': case 'med': case 'medium':
+      default:
+        $arguments['size'] = array('dm' => '0.18', 'qr' => '4');
+        break;
+
+      case 'l': case 'lrg': case 'large':
+        $arguments['size'] = array('dm' => '0.24', 'qr' => '6');
+        break;
+    }
+
+    switch ($arguments['type']) {
+      case 'dm':
+      default:
+        $text = array('data' => 'BARCODE', 'size' => 'X', 'margin_encoding' => '');
+        break;
+
+      case 'qr':
+        $text = array('data' => 'DATA', 'size' => 'MODULE_SIZE', 'margin_encoding' => '&MARGIN=2&ENCODING=BYTE');
+        break;
+    }
+
+    if (!$arguments['tinyurl']) {
+      $arguments['tinyurl'] = variable_get('mobile_codes_tinyurl_'. $format, 0);
+    }
+    if ($arguments['data'] == 'link' && ($arguments['tinyurl'] == 1 || drupal_strlen($data) > 60)) {
+      $headers = array('Content-type' => 'application/x-www-form-urlencoded');
+      $tinyurl = drupal_http_request('http://tinyurl.com/api-create.php?url='. urlencode($data), $headers, 'POST', NULL);
+      if ($tinyurl->code == 200) {
+        $data = $tinyurl->data;
+      }
+    }
+
+    $url = 'http://mobilecodes.nokia.com/'. $arguments['type'] .'?' . $text['data'] .'='.
+      urlencode($data) .'&'. $text['size'] .'='. $arguments['size'][$arguments['type']]
+      .'&name='. $name . $text['margin_encoding'] .'&type='. $arguments['data']
+      .'&MODE='. $mode .'&a=create';
+
+    mobile_codes_directory_check($dir);
+    $image = drupal_http_request($url);
+    file_save_data($image->data, $file, FILE_EXISTS_REPLACE);
+  }
+
+  return theme('image', $image_path, $name, $name, NULL, FALSE);
+}
+
+/**
+ * Create directory if it does not exist.
+ */
+function mobile_codes_directory_check($directory) {
+  foreach (explode('/', $directory) as $dir) {
+    $dirs[] = $dir;
+    $dir = file_directory_path() .'/'. implode($dirs, '/');
+    if (!file_check_directory($dir, FILE_CREATE_DIRECTORY)) {
+      return false;
+    }
+  }
+  return true;
 }
