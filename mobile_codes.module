@@ -2,6 +2,14 @@
 // $Id$
 
 /**
+ * @file
+ * Mobile Codes core functions
+ *
+ * Mobile Codes core functions to be used by Mobile Codes filter and any future
+ * integration features.
+ */
+
+/**
  * Include additional files
  */
 require drupal_get_path('module', 'mobile_codes') .'/mobile_codes.filter.inc';
@@ -145,7 +153,7 @@ function mobile_codes_generate($data, $arguments=array(), $format='') {
       }
     }
 
-    $url = 'http://mobilecodes.nokia.com/'. $arguments['type'] .'?' . $text['data'] .'='.
+    $url = 'http://mobilecodes.nokia.com/'. $arguments['type'] .'?'. $text['data'] .'='.
       urlencode($data) .'&'. $text['size'] .'='. $arguments['size'][$arguments['type']]
       .'&name='. $name . $text['margin_encoding'] .'&type='. $arguments['data']
       .'&MODE='. $mode .'&a=create';

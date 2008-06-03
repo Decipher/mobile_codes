@@ -2,22 +2,30 @@
 // $Id$
 
 /**
+ * @file
+ * Mobile Codes filter integration
+ *
+ * Mobile Codes filter integration adds the ability to render a mobile code via
+ * a text filter.
+ */
+
+/**
  * Implementation of hook_filter_tips().
  */
 function mobile_codes_filter_tips($delta, $format, $long = false) {
   if ($long) {
-  return t('Create a Mobile Code using the following format:
-            [mobilecode type="<em>type</em>" data="<em>data</em>" size="<em>size</em>" name="<em>name</em>" tinyurl="<em>tinyurl</em>"]<em>content</em>[/mobilecode]<br />
-            <strong>type</strong>: \'dm\' (Data Matrix), \'qr\' (QR Code) or leave blank for default.<br />
-            <strong>data type</strong>: \'link\', \'text\', \'phone\' or leave blank for default.<br />
-            <strong>size</strong>: \'small\', \'medium\', \'large\' or leave blank for default.<br />
-            <strong>name</strong>: user defined (optional)<br />
-            <strong>tinyurl</strong>: \'0\', \'1\' or leave blank for default.<br />
-            <strong>content</strong>: user defined.');
+    return t('Create a Mobile Code using the following format:
+              [mobilecode type="<em>type</em>" data="<em>data</em>" size="<em>size</em>" name="<em>name</em>" tinyurl="<em>tinyurl</em>"]<em>content</em>[/mobilecode]<br />
+              <strong>type</strong>: \'dm\' (Data Matrix), \'qr\' (QR Code) or leave blank for default.<br />
+              <strong>data type</strong>: \'link\', \'text\', \'phone\' or leave blank for default.<br />
+              <strong>size</strong>: \'small\', \'medium\', \'large\' or leave blank for default.<br />
+              <strong>name</strong>: user defined (optional)<br />
+              <strong>tinyurl</strong>: \'0\', \'1\' or leave blank for default.<br />
+              <strong>content</strong>: user defined.');
   }
   else {
-  return t('Create a Mobile Code using the following format:
-            [mobilecode type="<em>type</em>" data="<em>data type</em>" size="<em>size</em>" name="<em>name</em>" tinyurl="<em>tinyurl</em>"]<em>content</em>[/mobilecode]<br />');
+    return t('Create a Mobile Code using the following format:
+              [mobilecode type="<em>type</em>" data="<em>data type</em>" size="<em>size</em>" name="<em>name</em>" tinyurl="<em>tinyurl</em>"]<em>content</em>[/mobilecode]<br />');
   }
 }
 
@@ -30,15 +38,14 @@ function mobile_codes_filter($op, $delta = 0, $format = -1, $text = '') {
       return array(0 => t('Mobile codes filter'));
 
     case 'description':
-    return t('Create a Mobile Code using the following format:
-              [mobilecode type="<em>type</em>" data="<em>data type</em>" size="<em>size</em>" name="<em>name</em>" tinyurl="<em>tinyurl</em>"]<em>content</em>[/mobilecode]<br />');
+      return t('Create a Mobile Code using the following format:
+                [mobilecode type="<em>type</em>" data="<em>data type</em>" size="<em>size</em>" name="<em>name</em>" tinyurl="<em>tinyurl</em>"]<em>content</em>[/mobilecode]<br />');
 
     case 'prepare':
       return $text;
 
     case 'process':
-      $text = mobile_codes_filter_process($text, $format);
-      return $text;
+      return mobile_codes_filter_process($text, $format);
 
     case 'settings':
       return mobile_codes_filter_settings($format);
