@@ -96,8 +96,8 @@ function mobile_codes_generate($data, $arguments=array(), $format='') {
   }
 
   $dir = '/mobile_codes/'. $arguments['type'] .'/'. $arguments['data'] .'/'.  $arguments['size'];
-  $file = file_directory_path() . $dir .'/'. urlencode($data) .'.png';
-  $image_path  = file_directory_path() . $dir .'/'. urlencode(urlencode($data)) .'.png';
+  $file = file_directory_path() . $dir .'/'. urlencode($data) .'-'. $arguments['name'] .'.png';
+  $image_path  = file_directory_path() . $dir .'/'. urlencode(urlencode($data)) .'-'. $arguments['name'] .'.png';
 
 
   if (!file_exists(''. $file)) {
@@ -155,7 +155,7 @@ function mobile_codes_generate($data, $arguments=array(), $format='') {
 
     $url = 'http://mobilecodes.nokia.com/'. $arguments['type'] .'?'. $text['data'] .'='.
       urlencode($data) .'&'. $text['size'] .'='. $arguments['size'][$arguments['type']]
-      .'&name='. $name . $text['margin_encoding'] .'&type='. $arguments['data']
+      .'&name='. $arguments['name'] . $text['margin_encoding'] .'&type='. $arguments['data']
       .'&MODE='. $mode .'&a=create';
 
     mobile_codes_directory_check($dir);
@@ -163,7 +163,7 @@ function mobile_codes_generate($data, $arguments=array(), $format='') {
     file_save_data($image->data, $file, FILE_EXISTS_REPLACE);
   }
 
-  return theme('image', $image_path, $name, $name, NULL, FALSE);
+  return theme('image', $image_path, $arguments['name'], $arguments['name'], NULL, FALSE);
 }
 
 /**
