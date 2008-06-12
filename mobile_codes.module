@@ -96,9 +96,14 @@ function mobile_codes_generate($data, $arguments=array(), $format='') {
   }
 
   $dir = '/mobile_codes/'. $arguments['type'] .'/'. $arguments['data'] .'/'.  $arguments['size'];
-  $file = file_directory_path() . $dir .'/'. urlencode($data) .'-'. $arguments['name'] .'.png';
-  $image_path  = file_directory_path() . $dir .'/'. urlencode(urlencode($data)) .'-'. $arguments['name'] .'.png';
 
+  $name = '';
+  if (!empty($arguments['name'])) {
+    $name = '-' . $arguments['name'];
+  }
+
+  $file = file_directory_path() . $dir .'/'. urlencode($data) . $name .'.png';
+  $image_path  = file_directory_path() . $dir .'/'. urlencode(urlencode($data)) . $name .'.png';
 
   if (!file_exists(''. $file)) {
     switch ($arguments['data']) {
