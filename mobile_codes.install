@@ -1,0 +1,52 @@
+<?php
+
+// $Id$
+
+/**
+ * @file
+ */
+
+function mobile_codes_schema() {
+  $schema['mobile_codes'] = array(
+    'fields' => array(
+      'pid' => array('type' => 'int', 'unsigned' => TRUE, 'not null' => TRUE),
+      'data' => array('type' => 'text', 'size' => 'medium', 'not null' => TRUE, 'default' => ''),
+      'file' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+    ),
+    'primary key' => array('file'),
+  );
+
+  $schema['mobile_codes_presets'] = array(
+    'fields' => array(
+      'pid' => array('type' => 'serial', 'unsigned' => TRUE, 'not null' => TRUE),
+      'name' => array('type' => 'varchar', 'length' => 255, 'not null' => TRUE, 'default' => ''),
+      'data' => array('type' => 'text', 'size' => 'medium', 'not null' => TRUE, 'serialize' => TRUE),
+    ),
+    'unique keys' => array('name' => array('name')),
+    'primary key' => array('pid'),
+  );
+
+  return $schema;
+}
+
+function mobile_codes_install() {
+  drupal_install_schema('mobile_codes');
+
+  db_query(
+    "INSERT INTO {mobile_codes_presets} (pid, name, data) VALUES (%d, '%s', '%s')",
+    1, 'Default', 'a:4:{s:4:"type";s:2:"qr";s:4:"data";s:4:"text";s:4:"size";s:1:"m";s:7:"tinyurl";i:0;}'
+  );
+}
+
+function mobile_codes_uninstall() {
+  module_load_include('admin.inc', 'mobile_codes');
+
+  drupal_uninstall_schema('mobile_codes');
+
+  $dir = realpath(file_directory_path() .'/mobile_codes');
+  if (is_dir($dir)) {
+    _mobile_codes_recursive_delete($dir);
+  }
+
+  variable_del('mobile_codes_flush');
+}

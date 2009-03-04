@@ -16,7 +16,8 @@ function mobile_codes_filter_tips($delta, $format, $long = FALSE) {
   if ($long) {
     return t('
       Create a Mobile Code using the following format:<br />
-      [mobilecode type="<em>type</em>" data="<em>data</em>" size="<em>size</em>" name="<em>name</em>" tinyurl="<em>tinyurl</em>"]<em>content</em>[/mobilecode]
+      [mobilecode preset="<em>preset</em>" name="<em>name</em>"]<em>content</em>[/mobilecode] <strong>or</strong><br />
+      [mobilecode type="<em>type</em>" data="<em>data type</em>" size="<em>size</em>" name="<em>name</em>" tinyurl="<em>tinyurl</em>"]<em>content</em>[/mobilecode]
       <p>
         <strong>type</strong>: \'dm\' (Data Matrix), \'qr\' (QR Code) or leave blank for default.<br />
         <strong>data type</strong>: \'link\', \'text\', \'phone\' or leave blank for default.<br />
@@ -31,6 +32,7 @@ function mobile_codes_filter_tips($delta, $format, $long = FALSE) {
   else {
     return t('
       Create a Mobile Code using the following format:<br />
+      [mobilecode preset="<em>preset</em>" name="<em>name</em>"]<em>content</em>[/mobilecode] <strong>or</strong><br />
       [mobilecode type="<em>type</em>" data="<em>data type</em>" size="<em>size</em>" name="<em>name</em>" tinyurl="<em>tinyurl</em>"]<em>content</em>[/mobilecode]
     ');
   }
@@ -47,6 +49,7 @@ function mobile_codes_filter($op, $delta = 0, $format = -1, $text = '') {
     case 'description':
       return t('
         Create a Mobile Code using the following format:<br />
+        [mobilecode preset="<em>preset</em>" name="<em>name</em>"]<em>content</em>[/mobilecode] <strong>or</strong><br />
         [mobilecode type="<em>type</em>" data="<em>data type</em>" size="<em>size</em>" name="<em>name</em>" tinyurl="<em>tinyurl</em>"]<em>content</em>[/mobilecode]
       ');
 
@@ -57,7 +60,7 @@ function mobile_codes_filter($op, $delta = 0, $format = -1, $text = '') {
       return mobile_codes_filter_process($text, $format);
 
     case 'settings':
-      return mobile_codes_filter_settings($format);
+      return $text;
 
     default:
       return $text;
@@ -69,7 +72,7 @@ function mobile_codes_filter_process($text, $format) {
 
   if (preg_match_all('/\[mobilecode([^]]*)\]([^[]*)\[\/mobilecode\]/', $text, $codes, PREG_SET_ORDER)) {
     foreach ($codes as $match) {
-      if (preg_match_all('/\s(\w+)="([^"]*)"/', $match[1], $attributes, PREG_SET_ORDER)) {
+      if (preg_match_all('/\s(\w+)=["\']([^"\']*)["\']/', $match[1], $attributes, PREG_SET_ORDER)) {
         foreach ($attributes as $attribute) {
           $attr[$attribute[1]] = $attribute[2];
         }
@@ -80,15 +83,4 @@ function mobile_codes_filter_process($text, $format) {
   }
 
   return $text;
-}
-
-function mobile_codes_filter_settings($format) {
-  $form['mobile_codes_filter'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Mobile Codes filter'),
-    '#collapsible' => TRUE,
-  );
-  $form['mobile_codes_filter'][] = mobile_codes_settings($format);
-
-  return $form;
 }
