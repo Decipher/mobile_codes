@@ -77,7 +77,7 @@ function mobile_codes_filter_process($text, $format) {
           $attr[$attribute[1]] = $attribute[2];
         }
       }
-      $text = str_replace($match[0], mobile_codes_generate($match[2], $attr, $format), $text);
+      $text = str_replace($match[0], theme('mobilecode', $match[2], $attr), $text);
       unset($attr);
     }
   }

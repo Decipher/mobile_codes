@@ -90,7 +90,11 @@ function mobile_codes_theme() {
 
   module_load_include('admin.inc', 'mobile_codes');
   foreach (mobile_codes_get_presets() as $preset) {
-    $theme['mobile_codes_formatter_mobile_codes_'. $preset->name] = array(
+    $theme['mobile_codes_formatter_mobile_codes_'. $preset->name .'_default'] = array(
+      'arguments' => array('element' => NULL),
+      'function' => 'theme_mobile_codes_formatter',
+    );
+    $theme['mobile_codes_formatter_mobile_codes_'. $preset->name .'_path'] = array(
       'arguments' => array('element' => NULL),
       'function' => 'theme_mobile_codes_formatter',
     );
@@ -121,7 +125,7 @@ function mobile_codes_load_preset($pid) {
 /**
  * Generate a mobile code
  */
-function mobile_codes_generate($data, $arguments = array()) {
+function mobile_codes_generate($data, &$arguments = array()) {
   $values = mobile_codes_process_arguments($arguments);
   if (($file = mobile_codes_load_mobile_code($data, $arguments)) === FALSE) {
 
@@ -148,7 +152,7 @@ function mobile_codes_generate($data, $arguments = array()) {
     mobile_codes_save_mobile_code($data, $arguments, $file);
   }
 
-  return theme('image', $file, $arguments['name'], $arguments['name'], NULL, FALSE);
+  return $file;
 }
 
 /**
@@ -272,5 +276,7 @@ function mobile_codes_directory_check($directory) {
  * Theme function for displaying Mobile Codes
  */
 function theme_mobilecode($data, $arguments = array()) {
-  return mobile_codes_generate($data, $arguments);
+  $file = mobile_codes_generate($data, $arguments);
+
+  return theme('image', $file, $arguments['name'], $arguments['name'], NULL, FALSE);
 }

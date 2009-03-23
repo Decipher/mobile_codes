@@ -11,8 +11,12 @@ function mobile_codes_field_formatter_info() {
 
   module_load_include('admin.inc', 'mobile_codes');
   foreach (mobile_codes_get_presets() as $preset) {
-    $formatters['mobile_codes_'. $preset->name] = array(
-      'label' => t('Mobile code') .': '. $preset->name,
+    $formatters['mobile_codes_'. $preset->name .'_default'] = array(
+      'label' => t('Mobile code: @preset image', array('@preset' => $preset->name)),
+      'field types' => array('text')
+    );
+    $formatters['mobile_codes_'. $preset->name .'_path'] = array(
+      'label' => t('Mobile code: @preset file path', array('@preset' => $preset->name)),
       'field types' => array('text')
     );
   }
@@ -21,8 +25,22 @@ function mobile_codes_field_formatter_info() {
 }
 
 function theme_mobile_codes_formatter($element) {
-  return theme('mobilecode', $element['#item']['safe'], array(
+  preg_match('/^mobile_codes_(.*)_(.*)$/', $element['#formatter'], $matches);
+
+  $arguments = array(
     'data' => 'text',
-    'preset' => drupal_substr($element['#formatter'], 13),
-  ));
+    'preset' => $matches[1]
+  );
+
+  switch ($matches[2]) {
+    case 'path':
+      $output = mobile_codes_generate($element['#item']['safe'], $arguments);
+      break;
+
+    default:
+      $output = theme('mobilecode', $element['#item']['safe'], $arguments);
+      break;
+  }
+
+  return $output;
 }

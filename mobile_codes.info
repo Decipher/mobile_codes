@@ -3,9 +3,3 @@ name = Mobile Codes
 description = Create <a href="http://en.wikipedia.org/wiki/Datamatrix">Datamatrix</a> or <a href="http://en.wikipedia.org/wiki/QR_Code">QR</a> codes via an input filter or a direct call in your template.
 core = 6.x
 
-; Information added by drupal.org packaging script on 2009-02-26
-version = "6.x-1.x-dev"
-core = "6.x"
-project = "mobile_codes"
-datestamp = "1235650422"
-
