@@ -1,0 +1,20 @@
+// $Id$
+
+Mobile Codes 6.x-1.1, 2010-02-02
+--------------------------------
+
+- #409958: Added File path output to CCK/Views formatter.
+- #383296: Added theme() function to generate mobile codes.
+- #376518: Added class 'mobile_code' to generated mobile codes.
+- #268893: Fixed name value not being displayed.
+- Added Mobile Codes Administration/Presets.
+- Added CCK/Views formatter.
+- Added Mobile Codes local caching.
+- Fixed undefined variables/indexes.
+
+
+Mobile Codes 6.x-1.0, 2008-05-11
+--------------------------------
+
+- Initial 6.x release.
+
