@@ -1,4 +1,3 @@
-// $Id$
 
 Mobile Codes generates Datamatrix or QR Code mobile barcodes that can be read by
 many camera phones. The codes can contain URLs, Text or Phone Numbers, making it
