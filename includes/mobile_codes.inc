@@ -9,6 +9,14 @@
  */
 function mobile_codes_default_mobile_codes_preset() {
   $export = array();
+  drupal_alter('mobile_codes_default_mobile_codes_preset', $export);
+  return $export;
+}
+
+/**
+ * Implements hook_mobile_codes_default_mobile_codes_preset_alter().
+ */
+function mobile_codes_mobile_codes_default_mobile_codes_preset_alter($export) {
   $preset = new stdClass;
   $preset->disabled = FALSE; /* Edit this to true to make a default preset disabled initially */
   $preset->api_version = 2;
@@ -45,7 +53,6 @@ function mobile_codes_default_mobile_codes_preset() {
   );
 
   $export['small'] = $preset;
-  return $export;
 }
 
 /**
@@ -53,6 +60,14 @@ function mobile_codes_default_mobile_codes_preset() {
  */
 function mobile_codes_default_mobile_codes_provider() {
   $export = array();
+  drupal_alter('mobile_codes_default_mobile_codes_provider', $export);
+  return $export;
+}
+
+/**
+ * Implements hook_mobile_codes_default_mobile_codes_provider_alter().
+ */
+function mobile_codes_mobile_codes_default_mobile_codes_provider_alter($export) {
   $provider = new stdClass;
   $provider->disabled = FALSE; /* Edit this to true to make a default provider disabled initially */
   $provider->api_version = 2;
@@ -126,7 +141,37 @@ ISO-8859-1',
 
   $export['kaywa_qr'] = $provider;
   $provider = new stdClass;
-  $provider->disabled = TRUE; /* Edit this to true to make a default provider disabled initially */
+  $provider->disabled = FALSE; /* Edit this to true to make a default provider disabled initially */
+  $provider->api_version = 2;
+  $provider->name = 'nokia_dm';
+  $provider->url = 'http://mobilecodes.nokia.com/qr?DATA=[data]&MODULE_SIZE=[size]&name=[name]&MARGIN=[margin]&ENCODING=BYTE&type=[type]&a=create';
+  $provider->parameters = array(
+    'data' => array(
+      'token' => 'data',
+      'type' => 'data',
+    ),
+    'size' => array(
+      'token' => 'size',
+      'type' => 'text',
+    ),
+    'name' => array(
+      'token' => 'name',
+      'type' => 'text',
+    ),
+    'margin' => array(
+      'token' => 'margin',
+      'type' => 'text',
+    ),
+    'type' => array(
+      'token' => 'type',
+      'type' => 'select',
+      'value' => 'vcard',
+    ),
+  );
+
+  $export['nokia_dm'] = $provider;
+  $provider = new stdClass;
+  $provider->disabled = FALSE; /* Edit this to true to make a default provider disabled initially */
   $provider->api_version = 2;
   $provider->name = 'nokia_qr';
   $provider->url = 'http://mobilecodes.nokia.com/qr?DATA=[data]&MODULE_SIZE=[size]&name=[name]&MARGIN=[margin]&ENCODING=BYTE&type=[type]&a=create';
@@ -179,6 +224,4 @@ URL|Website URL',
   );
 
   $export['qrstuff'] = $provider;
-
-  return $export;
 }

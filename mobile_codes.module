@@ -1,18 +1,28 @@
 <?php
 /**
  * @file
- * Mobile Codes core functions
- *
- * Mobile Codes core functions to be used by Mobile Codes filter and any future
- * integration features.
+ * Mobile Codes core functions.
  */
 
 /**
- * Implement hooks.
+ * Include additional files.
  */
 foreach (module_list() as $module) {
   if (file_exists($file = dirname(__FILE__) . "/includes/{$module}.inc")) {
     require_once $file;
+  }
+}
+
+/**
+ * Implements hook_init().
+ */
+function mobile_codes_init() {
+  if (!module_exists('ctools')) {
+    module_enable(array('ctools'));
+    if (!module_exists('ctools')) {
+      drupal_set_message(t('Mobile Codes has been disabled as the required !ctools module is not present.', array('!ctools' => l(t('Chaos tool suite'), 'http://drupal.org/project/ctools'))), 'error');
+      module_disable(array('mobile_codes'));
+    }
   }
 }
 

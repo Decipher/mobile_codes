@@ -58,6 +58,7 @@ function mobile_codes_presets_export_ui_form(&$form, &$form_state) {
     '#type' => 'select',
     '#title' => t('Provider'),
     '#options' => array(),
+    '#default_value' => $form_state['item']->provider,
     '#ahah' => array(
       'path' => 'ahah/mobile_codes/presets/provider',
       'wrapper' => 'defaults-wrapper',
@@ -105,6 +106,7 @@ function mobile_codes_presets_export_ui_form_provider(&$form, $provider, $defaul
           '#type' => 'select',
           '#title' => $parameter,
           '#options' => $options,
+          '#default_value' => isset($defaults[$parameter]) ? $defaults[$parameter] : current($options),
         );
         break;
 
@@ -112,6 +114,7 @@ function mobile_codes_presets_export_ui_form_provider(&$form, $provider, $defaul
         $form['preset']['defaults'][$parameter] = array(
           '#type' => 'textfield',
           '#title' => $parameter,
+          '#default_value' => isset($defaults[$parameter]) ? $defaults[$parameter] : '',
         );
         break;
     }
@@ -121,16 +124,12 @@ function mobile_codes_presets_export_ui_form_provider(&$form, $provider, $defaul
 /**
  *
  */
-function mobile_codes_presets_export_ui_form_validate(&$form, &$form_state) {
-
-}
+function mobile_codes_presets_export_ui_form_validate(&$form, &$form_state) {}
 
 /**
  *
  */
-function mobile_codes_presets_export_ui_form_submit(&$form, &$form_state) {
-
-}
+function mobile_codes_presets_export_ui_form_submit(&$form, &$form_state) {}
 
 /**
  *
@@ -157,12 +156,6 @@ function mobile_codes_providers_export_ui_form(&$form, &$form_state) {
   );
 
   mobile_codes_providers_export_ui_form_parameters($form, $form_state['item']->url, $form_state['item']->parameters);
-
-  $form['sample'] = array(
-    '#title' => t('Sample'),
-    '#type' => 'fieldset',
-    '#description' => theme('mobilecode', $form_state['item']->name, array('provider' => $form_state['item']->name))
-  );
 }
 
 /**
