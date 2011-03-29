@@ -1,15 +1,11 @@
 <?php
-
 /**
  * @file
- * Mobile Codes filter integration
- *
- * Mobile Codes filter integration adds the ability to render a mobile code via
- * a text filter.
+ * Filter module integration.
  */
 
 /**
- * Implementation of hook_filter_tips().
+ * Implements hook_filter_tips().
  */
 function mobile_codes_filter_tips($delta, $format, $long = FALSE) {
   if ($long) {
@@ -38,7 +34,7 @@ function mobile_codes_filter_tips($delta, $format, $long = FALSE) {
 }
 
 /**
- * Implementation of hook_filter().
+ * Implements hook_filter().
  */
 function mobile_codes_filter($op, $delta = 0, $format = -1, $text = '') {
   switch ($op) {
@@ -66,6 +62,9 @@ function mobile_codes_filter($op, $delta = 0, $format = -1, $text = '') {
   }
 }
 
+/**
+ *
+ */
 function mobile_codes_filter_process($text, $format) {
   $attr = '';
 
