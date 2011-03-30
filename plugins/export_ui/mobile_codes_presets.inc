@@ -5,7 +5,7 @@
 
 $plugin = array(
   'schema' => 'mobile_codes_presets',
-  'access' => 'administer mobile codes presets',
+  'access' => 'administer mobile codes',
   'menu' => array(
     'menu prefix' => 'admin/settings/mobile_codes',
     'menu item' => 'presets',

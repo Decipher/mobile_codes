@@ -1,7 +1,12 @@
 Mobile Codes 6.x-2.x-dev, xxxx-xx-xx (Developmental release)
 --------------------------------
 
-- 
+- #923074: Added hook_perm() implementation.
+- #774854: Added support for PHP QR Code library.
+- #710840: Added Node URL block.
+- Added user-definable Mobile Code providers.
+- Added CTools Exportables support.
+- Added Link and FileField module field formatters.
 
 
 Mobile Codes 6.x-1.1, 2010-02-02

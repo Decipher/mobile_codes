@@ -5,7 +5,7 @@
 
 $plugin = array(
   'schema' => 'mobile_codes_providers',
-  'access' => 'administer mobile codes providers',
+  'access' => 'administer mobile codes',
   'menu' => array(
     'menu prefix' => 'admin/settings/mobile_codes',
     'menu item' => 'providers',

@@ -31,32 +31,30 @@ function mobile_codes_init() {
 //}
 
 /**
- * Implements hook_mobile_codes_menu_alter().
+ * Implements hook_perm().
  */
-//function mobile_codes_mobile_codes_menu_alter($items) {
-//  $items['admin/settings/mobile_codes/settings'] = array(
-//    'title' => 'Settings',
-//    'page callback' => 'mobile_codes_overview',
-//    'access arguments' => array('administer mobile codes'),
-//    'type' => MENU_LOCAL_TASK,
-//  );
-//}
+function mobile_codes_perm() {
+  return array('administer mobile codes');
+}
 
 /**
  * Implements hook_menu_alter().
  */
 function mobile_codes_menu_alter(&$items) {
-  $items['admin/settings/mobile_codes'] = array_merge(
-    $items['admin/settings/mobile_codes/presets'],
-    array(
-      'title' => 'Mobile Codes',
-      'type' => MENU_NORMAL_ITEM,
-    )
-  );
-  $items['admin/settings/mobile_codes/presets']['type'] = MENU_DEFAULT_LOCAL_TASK;
-  $items['admin/settings/mobile_codes/presets']['parent'] = 'admin/settings/mobile_codes';
-  $items['admin/settings/mobile_codes/providers']['type'] = MENU_LOCAL_TASK;
-  $items['admin/settings/mobile_codes/providers']['parent'] = 'admin/settings/mobile_codes';
+  // @TODO - Make this better.
+  if (isset($items['admin/settings/mobile_codes/presets'])) {
+    $items['admin/settings/mobile_codes'] = array_merge(
+      $items['admin/settings/mobile_codes/presets'],
+      array(
+        'title' => 'Mobile Codes',
+        'type' => MENU_NORMAL_ITEM,
+      )
+    );
+    $items['admin/settings/mobile_codes/presets']['type'] = MENU_DEFAULT_LOCAL_TASK;
+    $items['admin/settings/mobile_codes/presets']['parent'] = 'admin/settings/mobile_codes';
+    $items['admin/settings/mobile_codes/providers']['type'] = MENU_LOCAL_TASK;
+    $items['admin/settings/mobile_codes/providers']['parent'] = 'admin/settings/mobile_codes';
+  }
 }
 
 /**
@@ -76,6 +74,7 @@ function mobile_codes_mobile_codes_theme_alter($items) {
  */
 function mobile_codes_generate($url) {
   if (!file_exists($file = file_directory_path() . '/mobile_codes/' . md5(serialize($url)) . '.png')) {
+    // @TODO - Check for success.
     $image = drupal_http_request($url);
     if (file_check_directory($dir = file_directory_path() . '/mobile_codes', FILE_CREATE_DIRECTORY)) {
       file_save_data($image->data, $file);
