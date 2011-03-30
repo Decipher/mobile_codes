@@ -144,7 +144,7 @@ ISO-8859-1',
   $provider->disabled = FALSE; /* Edit this to true to make a default provider disabled initially */
   $provider->api_version = 2;
   $provider->name = 'nokia_dm';
-  $provider->url = 'http://mobilecodes.nokia.com/qr?DATA=[data]&MODULE_SIZE=[size]&name=[name]&MARGIN=[margin]&ENCODING=BYTE&type=[type]&a=create';
+  $provider->url = 'http://mobilecodes.nokia.com/dm?BARCODE=[data]&X=[size]&type=text';
   $provider->parameters = array(
     'data' => array(
       'token' => 'data',
@@ -152,20 +152,10 @@ ISO-8859-1',
     ),
     'size' => array(
       'token' => 'size',
-      'type' => 'text',
-    ),
-    'name' => array(
-      'token' => 'name',
-      'type' => 'text',
-    ),
-    'margin' => array(
-      'token' => 'margin',
-      'type' => 'text',
-    ),
-    'type' => array(
-      'token' => 'type',
       'type' => 'select',
-      'value' => 'vcard',
+      'value' => '0.12|S
+0.18|M
+0.25|L'
     ),
   );
 
@@ -174,7 +164,7 @@ ISO-8859-1',
   $provider->disabled = FALSE; /* Edit this to true to make a default provider disabled initially */
   $provider->api_version = 2;
   $provider->name = 'nokia_qr';
-  $provider->url = 'http://mobilecodes.nokia.com/qr?DATA=[data]&MODULE_SIZE=[size]&name=[name]&MARGIN=[margin]&ENCODING=BYTE&type=[type]&a=create';
+  $provider->url = 'http://mobilecodes.nokia.com/qr?DATA=[data]&MODULE_SIZE=[size]&MARGIN=2&ENCODING=BYTE&type=TEXT';
   $provider->parameters = array(
     'data' => array(
       'token' => 'data',
@@ -184,19 +174,6 @@ ISO-8859-1',
       'token' => 'size',
       'type' => 'text',
     ),
-    'name' => array(
-      'token' => 'name',
-      'type' => 'text',
-    ),
-    'margin' => array(
-      'token' => 'margin',
-      'type' => 'text',
-    ),
-    'type' => array(
-      'token' => 'type',
-      'type' => 'select',
-      'value' => 'vcard',
-    ),
   );
 
   $export['nokia_qr'] = $provider;
@@ -204,14 +181,8 @@ ISO-8859-1',
   $provider->disabled = FALSE; /* Edit this to true to make a default provider disabled initially */
   $provider->api_version = 2;
   $provider->name = 'qrstuff';
-  $provider->url = 'http://www.qrstuff.com/generate.generate?type=[type]&text=[data]&foreground_color=[color]';
+  $provider->url = 'http://www.qrstuff.com/generate.generate?type=TEXT&text=[data]&foreground_color=[color]';
   $provider->parameters = array(
-    'type' => array(
-      'token' => 'type',
-      'type' => 'select',
-      'value' => 'TEXT|Text
-URL|Website URL',
-    ),
     'data' => array(
       'token' => 'data',
       'type' => 'data',

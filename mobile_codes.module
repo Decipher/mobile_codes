@@ -70,14 +70,19 @@ function mobile_codes_mobile_codes_theme_alter($items) {
 }
 
 /**
- * Generate a mobile code
+ * Generate a mobile code.
  */
 function mobile_codes_generate($url) {
   if (!file_exists($file = file_directory_path() . '/mobile_codes/' . md5(serialize($url)) . '.png')) {
-    // @TODO - Check for success.
-    $image = drupal_http_request($url);
-    if (file_check_directory($dir = file_directory_path() . '/mobile_codes', FILE_CREATE_DIRECTORY)) {
-      file_save_data($image->data, $file);
+    $request = drupal_http_request($url);
+    if ($request->code == 200) {
+      if (file_check_directory($dir = file_directory_path() . '/mobile_codes', FILE_CREATE_DIRECTORY)) {
+        file_save_data($request->data, $file);
+      }
+    }
+
+    else {
+      return FALSE;
     }
   }
   return $file;
@@ -100,7 +105,7 @@ function theme_mobilecode($text, $data) {
       if (!isset($data[$parameter])) {
         switch ($provider->parameters[$parameter]['type']) {
           case 'data':
-            $data[$parameter] = $text;
+            $data[$parameter] = urlencode($text);
             break;
 
           case 'select':
@@ -112,13 +117,14 @@ function theme_mobilecode($text, $data) {
           case 'text':
             drupal_set_message(t('Mobile Codes argument %arg missing.', array('%arg' => $parameter)), 'error');
             return '';
-            break;
         }
       }
       $provider->url = str_replace("[{$parameter}]", $data[$parameter], $provider->url);
     }
-    $file = mobile_codes_generate($provider->url);
-    return theme('image', $file);
+
+    if ($file = mobile_codes_generate($provider->url)) {
+      return theme('image', $file);
+    }
   }
 
   drupal_set_message(t('Bad call to theme_mobilecode().'), 'error');
