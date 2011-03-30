@@ -55,6 +55,9 @@ function block_mobile_codes_block_alter($blocks) {
   );
 }
 
+/**
+ *
+ */
 function mobile_codes_block_node_url_configure($edit) {
   $form = array();
 
@@ -85,11 +88,17 @@ function mobile_codes_block_node_url_configure($edit) {
   return $form;
 }
 
+/**
+ *
+ */
 function mobile_codes_block_node_url_save($edit) {
   variable_set('mobile_codes_block_node_url_preset', $edit['preset']);
   variable_set('mobile_codes_block_node_url_options', $edit['options']);
 }
 
+/**
+ *
+ */
 function mobile_codes_block_node_url_view($edit) {
   if (arg(0) == 'node' && arg(2) == '') {
     $options = variable_get('mobile_codes_block_node_url_options', array(
@@ -97,6 +106,7 @@ function mobile_codes_block_node_url_view($edit) {
     ));
 
     $text = url('node/' . arg(1), array('absolute' => TRUE, 'alias' => !$options['alias']));
+    drupal_alter('mobile_codes_block_node_url_text', $text, $options);
     return array(
       'subject' => t('Mobile Codes: Node URL'),
       'content' => theme('mobilecode', $text, array('#preset' => variable_get('mobile_codes_block_node_url_preset', 'block_node_url')))

@@ -63,6 +63,9 @@ H|H - best',
   $export['phpqrcode'] = $provider;
 }
 
+/**
+ *
+ */
 function mobile_codes_libraries_phpqrcode_generate() {
   require_once libraries_get_path('phpqrcode/qrlib.php');
 
