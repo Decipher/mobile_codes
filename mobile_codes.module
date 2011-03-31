@@ -26,10 +26,6 @@ function mobile_codes_init() {
   }
 }
 
-//function mobile_codes_overview() {
-//  return '';
-//}
-
 /**
  * Implements hook_perm().
  */
