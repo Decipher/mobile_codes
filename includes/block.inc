@@ -51,7 +51,7 @@ function mobile_codes_block($op = 'list', $delta = 0, $edit = array()) {
  */
 function block_mobile_codes_block_alter($blocks) {
   $blocks['node_url'] = array(
-    'info' => t('Mobile Codes: Node URL'),
+    'info' => t('Node URL'),
   );
 }
 
@@ -74,17 +74,6 @@ function mobile_codes_block_node_url_configure($edit) {
     }
   }
 
-  $form['options'] = array(
-    '#type' => 'checkboxes',
-    '#title' => t('Options'),
-    '#options' => array(
-      'alias' => t('Use path Alias'),
-    ),
-    '#default_value' => variable_get('mobile_codes_block_node_url_options', array(
-      'alias' => 'alias',
-    ))
-  );
-
   return $form;
 }
 
@@ -93,23 +82,16 @@ function mobile_codes_block_node_url_configure($edit) {
  */
 function mobile_codes_block_node_url_save($edit) {
   variable_set('mobile_codes_block_node_url_preset', $edit['preset']);
-  variable_set('mobile_codes_block_node_url_options', $edit['options']);
 }
 
 /**
  *
  */
 function mobile_codes_block_node_url_view($edit) {
-  if (arg(0) == 'node' && arg(2) == '') {
-    $options = variable_get('mobile_codes_block_node_url_options', array(
-      'alias' => 'alias',
-    ));
-
-    $text = url('node/' . arg(1), array('absolute' => TRUE, 'alias' => !$options['alias']));
-    drupal_alter('mobile_codes_block_node_url_text', $text, $options);
+  if (arg(0) == 'node' && arg(1) != '' && arg(2) == '') {
     return array(
-      'subject' => t('Mobile Codes: Node URL'),
-      'content' => theme('mobilecode', $text, array('#preset' => variable_get('mobile_codes_block_node_url_preset', 'block_node_url')))
+      'subject' => t('Node URL'),
+      'content' => theme('mobilecode', url('node/' . arg(1), array('absolute' => TRUE, 'alias' => TRUE)), array('#preset' => variable_get('mobile_codes_block_node_url_preset', 'block_node_url')))
     );
   }
 }

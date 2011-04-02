@@ -34,6 +34,21 @@ function mobile_codes_perm() {
 }
 
 /**
+ * Implements hook_mobile_codes_menu_alter().
+ */
+function mobile_codes_mobile_codes_menu_alter($items) {
+  $items['admin/settings/mobile_codes/settings'] = array(
+    'title' => 'Settings',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mobile_codes_settings_form'),
+    'access arguments' => array('administer mobile codes'),
+    'file' => 'includes/mobile_codes.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+    'weight' => 10,
+  );
+}
+
+/**
  * Implements hook_menu_alter().
  */
 function mobile_codes_menu_alter(&$items) {
@@ -85,9 +100,22 @@ function mobile_codes_generate($url) {
 }
 
 /**
- * Theme function for displaying Mobile Codes
+ *
  */
-function theme_mobilecode($text, $data) {
+function mobile_code_data_type($text) {
+  switch ($text) {
+    case valid_url($text, TRUE):
+      return 'url';
+
+    default:
+      return 'text';
+  }
+}
+
+/**
+ *
+ */
+function mobile_codes_process_url($text, $data) {
   if (isset($data['#preset']) || isset($data['#provider'])) {
     ctools_include('export');
     if (isset($data['#preset'])) {
@@ -101,6 +129,7 @@ function theme_mobilecode($text, $data) {
       if (!isset($data[$parameter])) {
         switch ($provider->parameters[$parameter]['type']) {
           case 'data':
+            mobile_codes_process_text($text);
             $data[$parameter] = urlencode($text);
             break;
 
@@ -117,12 +146,55 @@ function theme_mobilecode($text, $data) {
       }
       $provider->url = str_replace("[{$parameter}]", $data[$parameter], $provider->url);
     }
+    dpm($provider->url);
+    return $provider->url;
+  }
+  return FALSE;
+}
 
-    if ($file = mobile_codes_generate($provider->url)) {
+/**
+ *
+ */
+function mobile_codes_process_text(&$text) {
+  $settings = array();
+  $type = mobile_code_data_type($text);
+  $defaults = variable_get('mobile_codes_settings', array(
+    'url' => array(
+      'alias' => 'alias',
+    ),
+  ));
+
+  drupal_alter('mobile_codes_settings', $settings);
+  if (is_array($settings[$type]) && count($settings[$type]) > 0) {
+    foreach ($settings[$type = mobile_code_data_type($text)] as $setting => $values) {
+      if ($defaults['url'][$setting]) {
+        $weight = isset($values['weight']) ? $values['weight'] : 0;
+        $order[$weight] = is_array($order[$weight]) ? $order[$weight] : array();
+        $order[$weight][] = $setting;
+      }
+    }
+
+    ksort($order);
+    foreach ($order as $settings) {
+      sort($settings);
+      foreach ($settings as $setting) {
+        if (function_exists($function = "mobile_codes_data_{$type}_{$setting}")) {
+          $function(&$text);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Theme function for displaying Mobile Codes
+ */
+function theme_mobilecode($text, $data) {
+  if ($url = mobile_codes_process_url($text, $data)) {
+    if ($file = mobile_codes_generate($url)) {
       return theme('image', $file);
     }
   }
-
-  drupal_set_message(t('Bad call to theme_mobilecode().'), 'error');
-  return '';
+  // @TODO - Set error.
+  return 'Error';
 }

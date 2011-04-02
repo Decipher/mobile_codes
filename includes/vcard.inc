@@ -27,7 +27,7 @@ function vcard_mobile_codes_default_mobile_codes_preset_alter($export) {
  */
 function vcard_mobile_codes_block_alter($blocks) {
   $blocks['user_vcard'] = array(
-    'info' => t('Mobile Codes: User vCard'),
+    'info' => t('User vCard'),
   );
 }
 

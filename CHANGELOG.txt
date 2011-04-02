@@ -9,6 +9,7 @@ Mobile Codes 6.x-2.x-dev, xxxx-xx-xx (Developmental release)
 - Added CTools Exportables support.
 - Added Link and FileField module field formatters.
 - Added user vCard block support.
+- Added data type detection and settings.
 
 
 Mobile Codes 6.x-1.1, 2010-02-02

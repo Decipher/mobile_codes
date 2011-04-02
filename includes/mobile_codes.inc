@@ -5,6 +5,26 @@
  */
 
 /**
+ * Implements hook_mobile_codes_settings_alter().
+ */
+function mobile_codes_mobile_codes_settings_alter($settings) {
+  $settings['url']['alias'] = array(
+    'label' => t('Use path alias'),
+    'description' => t('Use a path alias if it exists (e.g. node/1 -> section/title)'),
+  );
+}
+
+/**
+ * Implements mobile_codes_data_TYPE_SETTING().
+ */
+function mobile_codes_data_url_alias($text) {
+  global $base_url;
+  $path = str_replace("{$base_url}/", '', $text);
+  $alias = drupal_get_path_alias($path);
+  $text = str_replace($path, $alias, $text);
+}
+
+/**
  * Implements hook_default_mobile_codes_preset().
  */
 function mobile_codes_default_mobile_codes_preset() {
@@ -172,7 +192,10 @@ ISO-8859-1',
     ),
     'size' => array(
       'token' => 'size',
-      'type' => 'text',
+      'type' => 'select',
+      'valiue' => '2|S
+4|M
+6|L'
     ),
   );
 
