@@ -115,7 +115,7 @@ function mobile_codes_update_6200() {
   while ($result = db_fetch_object($results)) {
     $old = unserialize($result->defaults);
     $provider = "nokia_{$old['type']}";
-    $name = strtolower($result->name);
+    $name = drupal_strtolower($result->name);
 
     $size = $old['type'] = 'qr'
       ? array('s' => 2, 'm' => 4, 'l' => 6)

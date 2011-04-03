@@ -20,7 +20,7 @@ function mobile_codes_settings_form(&$form_state) {
   foreach ($settings as $type => $setting) {
     $form['settings'][$type] = array(
       '#type' => 'fieldset',
-      '#title' => t('!type settings', array('!type' => strtoupper($type))),
+      '#title' => t('!type settings', array('!type' => drupal_strtoupper($type))),
     );
 
     $order = array();

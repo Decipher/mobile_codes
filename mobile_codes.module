@@ -34,6 +34,32 @@ function mobile_codes_perm() {
 }
 
 /**
+ * Implements hook_flush_caches().
+ */
+function mobile_codes_flush_caches() {
+  _mobile_codes_recursive_delete(file_directory_path() . '/mobile_codes');
+  return array();
+}
+
+/**
+ *
+ */
+function _mobile_codes_recursive_delete($directory) {
+  if (is_dir($directory)) {
+    foreach (array_diff(scandir($directory), array('.', '..')) as $file) {
+      $file = "{$directory}/{$file}";
+      if (is_dir($file)) {
+        _mobile_codes_recursive_delete($file);
+        @rmdir($file);
+      }
+      else {
+        @unlink($file);
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_mobile_codes_menu_alter().
  */
 function mobile_codes_mobile_codes_menu_alter($items) {
@@ -154,7 +180,6 @@ function mobile_codes_process_url($text, $data) {
       }
       $provider->url = str_replace("[{$parameter}]", $data[$parameter], $provider->url);
     }
-    dpm($provider->url);
     return $provider->url;
   }
   return FALSE;

@@ -1,4 +1,4 @@
-Mobile Codes 6.x-2.x-dev, xxxx-xx-xx (Developmental release)
+Mobile Codes 6.x-2.x-beta1, 2011-04-03
 --------------------------------
 
 - #1109968: Fixed data encoding issue.
@@ -11,6 +11,7 @@ Mobile Codes 6.x-2.x-dev, xxxx-xx-xx (Developmental release)
 - Added user vCard block support.
 - Added data type detection and settings.
 - Added link tracking option via Redirecting Click Bouncer module.
+- Added Admin module optimized Mobile Codes generator block.
 
 
 Mobile Codes 6.x-1.1, 2010-02-02

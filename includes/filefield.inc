@@ -36,5 +36,7 @@ function filefield_mobile_codes_field_formatter_info_alter($formatters) {
 }
 
 function theme_mobile_codes_filefield_formatter($element) {
-  return theme('mobilecode', url($element['#item']['filepath'], array('absolute' => TRUE)), array('#preset' => substr($element['#formatter'], 23)));
+  if (!mobile_codes_content_field_is_empty($element)) {
+    return theme('mobilecode', url($element['#item']['filepath'], array('absolute' => TRUE)), array('#preset' => drupal_substr($element['#formatter'], 23)));
+  }
 }
