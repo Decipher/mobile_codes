@@ -23,13 +23,26 @@ function mobile_codes_settings_form(&$form_state) {
       '#title' => t('!type settings', array('!type' => strtoupper($type))),
     );
 
-    foreach ($setting as $key => $values) {
-      $form['settings'][$type][$key] = array(
-        '#type' => 'checkbox',
-        '#title' => $values['label'],
-        '#description' => $values['description'],
-        '#default_value' => isset($defaults[$type][$key]) ? $defaults[$type][$key] : FALSE,
-      );
+    $order = array();
+    if (is_array($settings[$type]) && count($settings[$type]) > 0) {
+      foreach ($settings[$type = mobile_code_data_type($text)] as $setting => $values) {
+        $weight = isset($values['weight']) ? $values['weight'] : 0;
+        $order[$weight] = is_array($order[$weight]) ? $order[$weight] : array();
+        $order[$weight][] = $setting;
+      }
+
+      ksort($order);
+      foreach ($order as $order_settings) {
+        sort($order_settings);
+        foreach ($order_settings as $setting) {
+          $form['settings'][$type][$setting] = array(
+            '#type' => 'checkbox',
+            '#title' => $settings[$type][$setting]['label'],
+            '#description' => $settings[$type][$setting]['description'],
+            '#default_value' => isset($defaults[$type][$setting]) ? $defaults[$type][$setting] : FALSE,
+          );
+        }
+      }
     }
   }
 
