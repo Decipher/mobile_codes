@@ -46,6 +46,14 @@ function mobile_codes_mobile_codes_menu_alter($items) {
     'type' => MENU_LOCAL_TASK,
     'weight' => 10,
   );
+
+  $items['ahah/mobile_codes'] = array(
+    'title' => 'Mobile Codes AHAH callback',
+    'page callback' => 'mobile_codes_ahah',
+    'page arguments' => array(2, 3),
+    'access arguments' => array('administer mobile codes providers'),
+    'type' => MENU_CALLBACK,
+  );
 }
 
 /**
@@ -184,6 +192,52 @@ function mobile_codes_process_text(&$text) {
       }
     }
   }
+}
+
+
+/**
+ *
+ */
+function mobile_codes_ahah($section, $op = NULL) {
+  // Immediately disable devel shutdown functions so that it doesn't botch our
+  // JSON output.
+  $GLOBALS['devel_shutdown'] = FALSE;
+
+  if (empty($_POST['form_build_id'])) {
+    // Invalid request.
+    drupal_set_message(t('An unrecoverable error occurred.'));
+    print drupal_to_js(array('data' => theme('status_messages')));
+    exit;
+  }
+
+  // Load the form.
+  $form_state = array(
+    'rebuild' => TRUE,
+    'storage' => NULL,
+    'submitted' => FALSE
+  );
+  $form_build_id = $_POST['form_build_id'];
+  $form = form_get_cache($form_build_id, $form_state);
+  $args = $form['#parameters'];
+  $form_id = array_shift($args);
+  $form_state['post'] = $form['#post'] = $_POST;
+  $form['#programmed'] = $form['#redirect'] = FALSE;
+  form_set_error(NULL, '', TRUE);
+
+  // Process the form with drupal_process_form(), which calls the submit
+  // handlers that puts whatever was worthy of keeping in the $form_state.
+  drupal_process_form($form_id, $form, $form_state);
+
+  // Session messages would get displayed at the next regular request, but
+  // we're in AHAH here, so that won't happen. Make them go away.
+  unset($_SESSION['messages']);
+  form_set_error(NULL, '', TRUE);
+
+  if (function_exists($function = "mobile_codes_ahah_{$section}_{$op}") || function_exists($function = "mobile_codes_ahah_{$section}")) {
+    $output = $function($form_id, $form, $form_state, $args, $form_build_id);
+  }
+
+  print drupal_to_js(array('status' => TRUE, 'data' => $output));
 }
 
 /**

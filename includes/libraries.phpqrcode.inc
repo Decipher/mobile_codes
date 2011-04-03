@@ -34,6 +34,7 @@ function mobile_codes_libraries_phpqrcode_default_mobile_codes_provider_alter(&$
     ),
     'ecc' => array(
       'token' => 'ecc',
+      'label' => 'Error correction level',
       'type' => 'select',
       'value' => 'L|L - smallest
 M
@@ -42,6 +43,7 @@ H|H - best',
     ),
     'size' => array(
       'token' => 'size',
+      'label' => 'Size',
       'type' => 'select',
       'value' => '1
 2
@@ -56,6 +58,7 @@ H|H - best',
     ),
     'margin' => array(
       'token' => 'margin',
+      'label' => 'Margin',
       'type' => 'text',
     ),
   );

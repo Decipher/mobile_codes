@@ -24,19 +24,6 @@ function mobile_codes_ctools_plugin_directory($module, $plugin) {
 }
 
 /**
- * Implements hook_mobile_codes_menu_alter() on behalf of ctools.module.
- */
-function ctools_mobile_codes_menu_alter($items) {
-  $items['ahah/mobile_codes'] = array(
-    'title' => 'Mobile Codes Services form AHAH callback',
-    'page callback' => 'mobile_codes_ctools_export_ui_form_ahah',
-    'page arguments' => array(2, 3),
-    'access arguments' => array('administer mobile codes providers'),
-    'type' => MENU_CALLBACK,
-  );
-}
-
-/**
  * Implements hook_mobile_codes_theme_alter() on behalf of ctools.module.
  */
 function ctools_mobile_codes_theme_alter($items) {
@@ -104,7 +91,7 @@ function mobile_codes_presets_export_ui_form_provider(&$form, $provider, $defaul
         }
         $form['preset']['defaults'][$parameter] = array(
           '#type' => 'select',
-          '#title' => $parameter,
+          '#title' => isset($provider->parameters[$parameter]['label']) ? $provider->parameters[$parameter]['label'] : $parameter,
           '#options' => $options,
           '#default_value' => isset($defaults[$parameter]) ? $defaults[$parameter] : current($options),
         );
@@ -113,7 +100,8 @@ function mobile_codes_presets_export_ui_form_provider(&$form, $provider, $defaul
       case 'text':
         $form['preset']['defaults'][$parameter] = array(
           '#type' => 'textfield',
-          '#title' => $parameter,
+          '#title' => isset($provider->parameters[$parameter]['label']) ? $provider->parameters[$parameter]['label'] : $parameter,
+          '#size' => 5,
           '#default_value' => isset($defaults[$parameter]) ? $defaults[$parameter] : '',
         );
         break;
@@ -129,7 +117,23 @@ function mobile_codes_presets_export_ui_form_validate(&$form, &$form_state) {}
 /**
  *
  */
-function mobile_codes_presets_export_ui_form_submit(&$form, &$form_state) {}
+function mobile_codes_presets_export_ui_form_submit(&$form, &$form_state) {
+  $form_state['values']['defaults'] = $_POST['defaults'];
+}
+
+/**
+ *
+ */
+function mobile_codes_ahah_presets_provider($form_id, $form, $form_state) {
+  mobile_codes_presets_export_ui_form_provider($form, $form_state['values']['provider'], $form_state['values']['defaults']);
+
+  // Process the form with drupal_process_form(), which calls the submit
+  // handlers that puts whatever was worthy of keeping in the $form_state.
+  drupal_process_form($form_id, $form, $form_state);
+
+  unset($form['preset']['defaults']['#prefix'], $form['preset']['defaults']['#suffix']);
+  return drupal_render($form['preset']['defaults']);
+}
 
 /**
  *
@@ -173,6 +177,15 @@ function mobile_codes_providers_export_ui_form_parameters(&$form, $url, $paramet
       '#value' => $token[1],
     );
 
+    if ($parameters[$token[1]]['type'] != 'data') {
+      $form['provider']['parameters'][$token[1]]['label'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Label'),
+        '#size' => 30,
+        '#default_value' => isset($parameters[$token[1]]) ? $parameters[$token[1]]['label'] : '',
+      );
+    }
+
     $form['provider']['parameters'][$token[1]]['type'] = array(
       '#type' => 'select',
       '#options' => array(
@@ -187,30 +200,21 @@ function mobile_codes_providers_export_ui_form_parameters(&$form, $url, $paramet
       ),
     );
 
-    if (isset($parameters[$token[1]])) {
-      switch ($parameters[$token[1]]['type']) {
-        case 'select':
-          $form['provider']['parameters'][$token[1]]['value'] = array(
-            '#type' => 'textarea',
-            '#title' => t('Values'),
-            '#default_value' => isset($parameters[$token[1]]) ? $parameters[$token[1]]['value'] : '',
-          );
-          break;
-
-        case 'text':
-          $form['provider']['parameters'][$token[1]]['value'] = array(
-            '#type' => 'textfield',
-            '#title' => t('Default value'),
-            '#default_value' => isset($parameters[$token[1]]) ? $parameters[$token[1]]['value'] : '',
-          );
-          break;
-      }
+    if (isset($parameters[$token[1]]) && $parameters[$token[1]]['type'] == 'select') {
+      $form['provider']['parameters'][$token[1]]['value'] = array(
+        '#type' => 'textarea',
+        '#title' => t('Values'),
+        '#default_value' => isset($parameters[$token[1]]) ? $parameters[$token[1]]['value'] : '',
+      );
     }
   }
 }
 
+/**
+ *
+ */
 function theme_mobile_codes_providers_export_ui_form_parameters($element) {
-  $headers = array(t('Token'), t('Type'), t('Value(s)'));
+  $headers = array(t('Token'), t('Label'), t('Type'), t('Value(s)'));
   $rows = array();
   foreach (element_children($element) as $child) {
     foreach (element_children($element[$child]) as $field) {
@@ -218,6 +222,7 @@ function theme_mobile_codes_providers_export_ui_form_parameters($element) {
     }
     $row = array();
     $row[] = array('data' => drupal_render($element[$child]['token']) . "[{$element[$child]['token']['#value']}]");
+    $row[] = array('data' => drupal_render($element[$child]['label']));
     $row[] = array('data' => drupal_render($element[$child]['type']));
     $row[] = array('data' => drupal_render($element[$child]['value']));
     $rows[] = $row;
@@ -225,82 +230,48 @@ function theme_mobile_codes_providers_export_ui_form_parameters($element) {
   return theme('table', $headers, $rows);
 }
 
-function mobile_codes_providers_export_ui_form_validate(&$form, &$form_state) {
+function mobile_codes_providers_export_ui_form_validate(&$form, &$form_state) {}
 
-}
-
+/**
+ *
+ */
 function mobile_codes_providers_export_ui_form_submit(&$form, &$form_state) {
+  $form_state['values'] = $_POST;
   $form_state['item']->parameters = $form_state['values']['parameters'];
 }
 
 /**
  *
  */
-function mobile_codes_ctools_export_ui_form_ahah($section, $op) {
-  // Immediately disable devel shutdown functions so that it doesn't botch our
-  // JSON output.
-  $GLOBALS['devel_shutdown'] = FALSE;
-
-  if (empty($_POST['form_build_id'])) {
-    // Invalid request.
-    drupal_set_message(t('An unrecoverable error occurred.'));
-    print drupal_to_js(array('data' => theme('status_messages')));
-    exit;
-  }
-
-  // Load the form.
-  $form_state = array(
-    'rebuild' => TRUE,
-    'storage' => NULL,
-    'submitted' => FALSE
-  );
-  $form_build_id = $_POST['form_build_id'];
-  $form = form_get_cache($form_build_id, $form_state);
-  $args = $form['#parameters'];
-  $form_id = array_shift($args);
-  $form_state['post'] = $form['#post'] = $_POST;
-  $form['#programmed'] = $form['#redirect'] = FALSE;
+function mobile_codes_ahah_providers_url($form_id, $form, $form_state) {
+  mobile_codes_providers_export_ui_form_parameters($form, $form_state['values']['url'], $form_state['values']['parameters']);
 
   // Process the form with drupal_process_form(), which calls the submit
   // handlers that puts whatever was worthy of keeping in the $form_state.
   drupal_process_form($form_id, $form, $form_state);
 
-  // Session messages would get displayed at the next regular request, but
-  // we're in AHAH here, so that won't happen. Make them go away.
-  //unset($_SESSION['messages']);
+  unset($form['provider']['parameters']['#prefix'], $form['provider']['parameters']['#suffix']);
+  $output = drupal_render($form['provider']['parameters']);
 
-  switch ($section) {
-    case 'presets':
-      switch ($op) {
-        case 'provider':
-          mobile_codes_presets_export_ui_form_provider($form, $form_state['values']['provider'], $form_state['values']['defaults']);
-
-          // Process the form with drupal_process_form(), which calls the submit
-          // handlers that puts whatever was worthy of keeping in the $form_state.
-          drupal_process_form($form_id, $form, $form_state);
-
-          unset($form['preset']['defaults']['#prefix'], $form['preset']['defaults']['#suffix']);
-          $output = drupal_render($form['preset']['defaults']);
-          break;
-      }
-      break;
-
-    case 'providers':
-      switch ($op) {
-        case 'type':
-        case 'url':
-          mobile_codes_providers_export_ui_form_parameters($form, $form_state['values']['url'], $form_state['values']['parameters']);
-
-          // Process the form with drupal_process_form(), which calls the submit
-          // handlers that puts whatever was worthy of keeping in the $form_state.
-          drupal_process_form($form_id, $form, $form_state);
-
-          unset($form['provider']['parameters']['#prefix'], $form['provider']['parameters']['#suffix']);
-          $output = drupal_render($form['provider']['parameters']);
-          break;
-      }
-      break;
+  $javascript = drupal_add_js(NULL, NULL);
+  if (isset($javascript['setting'])) {
+    $output .= '<script type="text/javascript">jQuery.extend(Drupal.settings, ' . drupal_to_js(call_user_func_array('array_merge_recursive', $javascript['setting'])) . ');</script>';
   }
 
-  print drupal_to_js(array('status' => TRUE, 'data' => $output));
+  return $output;
+}
+
+/**
+ *
+ */
+function mobile_codes_ahah_providers_type($form_id, $form, $form_state) {
+  $form_state['values']['parameters'] = isset($form_state['values']['parameters']) ? $form_state['values']['parameters'] : $_POST['parameters'];
+  mobile_codes_providers_export_ui_form_parameters($form, $form_state['values']['url'], $form_state['values']['parameters']);
+
+  // Process the form with drupal_process_form(), which calls the submit
+  // handlers that puts whatever was worthy of keeping in the $form_state.
+  drupal_process_form($form_id, $form, $form_state);
+
+  unset($form['provider']['parameters']['#prefix'], $form['provider']['parameters']['#suffix']);
+  return drupal_render($form['provider']['parameters']);
 }

@@ -96,13 +96,13 @@ function mobile_codes_mobile_codes_default_mobile_codes_provider_alter($export) 
   $provider->parameters = array(
     'width' => array(
       'token' => 'width',
+      'label' => 'Width',
       'type' => 'text',
-      'value' => '150',
     ),
     'height' => array(
       'token' => 'height',
+      'label' => 'Height',
       'type' => 'text',
-      'value' => '150',
     ),
     'data' => array(
       'token' => 'data',
@@ -110,6 +110,7 @@ function mobile_codes_mobile_codes_default_mobile_codes_provider_alter($export) 
     ),
     'output_encoding' => array(
       'token' => 'output_encoding',
+      'label' => 'Output encoding',
       'type' => 'select',
       'value' => 'UTF-8
 Shift_JIS
@@ -126,6 +127,7 @@ ISO-8859-1',
   $provider->parameters = array(
     'size' => array(
       'token' => 'size',
+      'label' => 'Size',
       'type' => 'select',
       'value' => '5|Small
 6|Medium
@@ -147,6 +149,7 @@ ISO-8859-1',
   $provider->parameters = array(
     'size' => array(
       'token' => 'size',
+      'label' => 'Size',
       'type' => 'select',
       'value' => '5|Small
 6|Medium
@@ -172,10 +175,11 @@ ISO-8859-1',
     ),
     'size' => array(
       'token' => 'size',
+      'label' => 'Size',
       'type' => 'select',
       'value' => '0.12|S
 0.18|M
-0.25|L'
+0.25|L',
     ),
   );
 
@@ -192,10 +196,11 @@ ISO-8859-1',
     ),
     'size' => array(
       'token' => 'size',
+      'label' => 'Size',
       'type' => 'select',
-      'valiue' => '2|S
+      'value' => '2|S
 4|M
-6|L'
+6|L',
     ),
   );
 
@@ -212,8 +217,8 @@ ISO-8859-1',
     ),
     'color' => array(
       'token' => 'color',
+      'label' => 'Color',
       'type' => 'text',
-      'value' => '000000',
     ),
   );
 

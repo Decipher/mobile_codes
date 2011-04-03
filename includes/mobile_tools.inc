@@ -18,5 +18,8 @@ function mobile_tools_mobile_codes_settings_alter($settings) {
  * Implements mobile_codes_data_TYPE_SETTING().
  */
 function mobile_codes_data_url_mobile_tools($text) {
-  $text = mobile_tools_create_mobile_url($text);
+  global $base_url;
+  if (strpos($text, $base_url) === 0) {
+    $text = mobile_tools_create_mobile_url($text);
+  }
 }
