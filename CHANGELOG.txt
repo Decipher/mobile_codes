@@ -1,4 +1,12 @@
-Mobile Codes 6.x-2.x-beta1, 2011-04-03
+Mobile Codes 6.x-2.x-dev, xxxx-xx-xx (Development release)
+--------------------------------
+
+- Added Custom Formatter example.
+- Fixed issue with Presets Add UI AHAH.
+- Improved Features support.
+
+
+Mobile Codes 6.x-2.0-beta1, 2011-04-03
 --------------------------------
 
 - #1109968: Fixed data encoding issue.

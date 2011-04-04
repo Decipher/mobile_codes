@@ -78,7 +78,7 @@ function mobile_codes_presets_export_ui_form_provider(&$form, $provider, $defaul
   }
 
   ctools_include('export');
-  $provider = isset($provider) ? $provider : $form['info']['provider']['#options'][0];
+  $provider = isset($provider) ? $provider : current($form['info']['provider']['#options']);
   $provider = ctools_export_crud_load('mobile_codes_providers', $provider);
   foreach (element_children($provider->parameters) as $parameter) {
     switch ($provider->parameters[$parameter]['type']) {
@@ -103,6 +103,7 @@ function mobile_codes_presets_export_ui_form_provider(&$form, $provider, $defaul
           '#title' => isset($provider->parameters[$parameter]['label']) ? $provider->parameters[$parameter]['label'] : $parameter,
           '#size' => 5,
           '#default_value' => isset($defaults[$parameter]) ? $defaults[$parameter] : '',
+          '#required' => TRUE,
         );
         break;
     }

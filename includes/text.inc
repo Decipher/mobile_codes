@@ -35,6 +35,9 @@ function text_mobile_codes_field_formatter_info_alter($formatters) {
   }
 }
 
+/**
+ *
+ */
 function theme_mobile_codes_text_formatter($element) {
   if (!mobile_codes_content_field_is_empty($element)) {
     return theme('mobilecode', $element['#item']['safe'], array('#preset' => drupal_substr($element['#formatter'], 18)));
