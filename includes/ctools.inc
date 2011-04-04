@@ -215,7 +215,7 @@ function mobile_codes_providers_export_ui_form_parameters(&$form, $url, $paramet
  *
  */
 function theme_mobile_codes_providers_export_ui_form_parameters($element) {
-  $headers = array(t('Token'), t('Label'), t('Type'), t('Value(s)'));
+  $headers = array(t('Token'), t('Label'), t('Type'), t('Values'));
   $rows = array();
   foreach (element_children($element) as $child) {
     foreach (element_children($element[$child]) as $field) {

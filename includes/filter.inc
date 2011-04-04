@@ -10,7 +10,7 @@
 function mobile_codes_filter_tips($delta, $format, $long = FALSE) {
   return t('
     Create a Mobile Code using the following format:<br />
-    [mobilecode @preset="<em>preset</em>"]<em>content</em>[/mobilecode]
+    [mobilecode #preset="<em>preset</em>"]<em>content</em>[/mobilecode]
   ');
 }
 

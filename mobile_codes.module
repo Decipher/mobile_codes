@@ -17,6 +17,7 @@ foreach (module_list() as $module) {
  * Implements hook_init().
  */
 function mobile_codes_init() {
+  // Determine if CTools is available after Mobile Codes 1.x to 2.x upgrade.
   if (!module_exists('ctools')) {
     module_enable(array('ctools'));
     if (!module_exists('ctools')) {
@@ -42,7 +43,10 @@ function mobile_codes_flush_caches() {
 }
 
 /**
+ * Recursively delete files and folders.
  *
+ * @param $directory
+ *   The directory to recurse through.
  */
 function _mobile_codes_recursive_delete($directory) {
   if (is_dir($directory)) {
@@ -108,14 +112,25 @@ function mobile_codes_menu_alter(&$items) {
 function mobile_codes_mobile_codes_theme_alter($items) {
   $items['mobilecode'] = array(
     'arguments' => array(
-      'text' => NULL,
-      'data' => array(),
+      'data' => NULL,
+      'attributes' => array(),
+      'image_alt' => '',
+      'image_title' => '',
+      'image_attributes' => NULL,
+      'image_getsize' => TRUE,
     ),
   );
 }
 
 /**
- * Generate a mobile code.
+ * Cache a Mobile Code.
+ *
+ * @param $url
+ *   A processed Mobile Code URL.
+ *
+ * @return
+ *   The path of the cached Mobile Code if request is successful, and FALSE if
+ *   it isn't.
  */
 function mobile_codes_generate($url) {
   if (!file_exists($file = file_directory_path() . '/mobile_codes/' . md5(serialize($url)) . '.png')) {
@@ -134,11 +149,17 @@ function mobile_codes_generate($url) {
 }
 
 /**
+ * Determine the Data type of the provided data.
  *
+ * @param $data
+ *   The data as provided for use in a Mobile Code.
+ *
+ * @return
+ *   The determined Data type.
  */
-function mobile_code_data_type($text) {
-  switch ($text) {
-    case valid_url($text, TRUE):
+function mobile_code_data_type($data) {
+  switch ($data) {
+    case valid_url($data, TRUE):
       return 'url';
 
     default:
@@ -147,30 +168,40 @@ function mobile_code_data_type($text) {
 }
 
 /**
+ * Process Mobile Codes request URL.
  *
+ * @param $data
+ *   The data as provided for use in a Mobile Code.
+ * @param $attributes
+ *   An associative array of attributes necessary to create a Mobile Code.
+ *   - #preset: A string containing the name of a Mobile Code Preset.
+ *
+ * @return
+ *   The processed Mobile Codes request URL if all required attributes are
+ *   provided, or FALSE if they aren't.
  */
-function mobile_codes_process_url($text, $data) {
-  if (isset($data['#preset']) || isset($data['#provider'])) {
+function mobile_codes_process_url($data, $attributes) {
+  if (isset($attributes['#preset']) || isset($attributes['#provider'])) {
     ctools_include('export');
-    if (isset($data['#preset'])) {
-      $preset = clone(ctools_export_crud_load('mobile_codes_presets', $data['#preset']));
-      $data['#provider'] = $preset->provider;
-      $data = array_merge($data, $preset->defaults);
+    if (isset($attributes['#preset'])) {
+      $preset = clone(ctools_export_crud_load('mobile_codes_presets', $attributes['#preset']));
+      $attributes['#provider'] = $preset->provider;
+      $attributes = array_merge($attributes, $preset->defaults);
     }
 
-    $provider = clone(ctools_export_crud_load('mobile_codes_providers', $data['#provider']));
+    $provider = clone(ctools_export_crud_load('mobile_codes_providers', $attributes['#provider']));
     foreach (element_children($provider->parameters) as $parameter) {
-      if (!isset($data[$parameter])) {
+      if (!isset($attributes[$parameter])) {
         switch ($provider->parameters[$parameter]['type']) {
           case 'data':
-            mobile_codes_process_text($text);
-            $data[$parameter] = urlencode($text);
+            mobile_codes_process_data($data);
+            $attributes[$parameter] = urlencode($data);
             break;
 
           case 'select':
             $provider->parameters[$parameter]['value'] = explode("\n", $provider->parameters[$parameter]['value']);
             $provider->parameters[$parameter]['value'][0] = explode("|", $provider->parameters[$parameter]['value'][0]);
-            $data[$parameter] = $provider->parameters[$parameter]['value'][0][0];
+            $attributes[$parameter] = $provider->parameters[$parameter]['value'][0][0];
             break;
 
           case 'text':
@@ -178,7 +209,7 @@ function mobile_codes_process_url($text, $data) {
             return '';
         }
       }
-      $provider->url = str_replace("[{$parameter}]", $data[$parameter], $provider->url);
+      $provider->url = str_replace("[{$parameter}]", $attributes[$parameter], $provider->url);
     }
     return $provider->url;
   }
@@ -186,9 +217,12 @@ function mobile_codes_process_url($text, $data) {
 }
 
 /**
+ * Process the data provided to a Mobile Code.
  *
+ * @param $data
+ *   The data provided to a Mobile Code.
  */
-function mobile_codes_process_text(&$text) {
+function mobile_codes_process_data(&$data) {
   $settings = array();
   $type = mobile_code_data_type($text);
   $defaults = variable_get('mobile_codes_settings', array(
@@ -221,7 +255,12 @@ function mobile_codes_process_text(&$text) {
 
 
 /**
+ * AHAH callback.
  *
+ * @param $section
+ *   The form section invoking the AHAH callback.
+ * @param $op
+ *   The specific form operation requiring the AHAH callback.
  */
 function mobile_codes_ahah($section, $op = NULL) {
   // Immediately disable devel shutdown functions so that it doesn't botch our
@@ -268,12 +307,22 @@ function mobile_codes_ahah($section, $op = NULL) {
 /**
  * Theme function for displaying Mobile Codes
  */
-function theme_mobilecode($text, $data) {
-  if ($url = mobile_codes_process_url($text, $data)) {
-    if ($file = mobile_codes_generate($url)) {
-      return theme('image', $file);
+function theme_mobilecode($data, $attributes, $image_alt = '', $image_title = '', $image_attributes = NULL, $image_getsize = TRUE) {
+  if ($url = mobile_codes_process_url($data, $attributes)) {
+    if ($path = mobile_codes_generate($url)) {
+      return theme('image', $path, $image_alt, $image_title, $image_attributes, $image_getsize);
     }
   }
   // @TODO - Set error.
   return 'Error';
+}
+
+/**
+ * Invokes hook_preprocess_page().
+ */
+function mobile_codes_preprocess_page(&$vars) {
+  global $theme;
+  if (file_exists($file = drupal_get_path('module', 'mobile_codes') . "/styles/{$theme}.css")) {
+    drupal_add_css($file);
+  }
 }

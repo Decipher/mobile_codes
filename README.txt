@@ -50,30 +50,9 @@ Recommended modules
 Configuration
 --------------------------------------------------------------------------------
 
-General configuration for Mobile Codes can be found at:
+All configuration for Mobile Codes can be found at:
   Administer > Site configuration > Mobile Codes
   http://[www.yoursite.com/path/to/drupal]/admin/settings/mobile_codes
-
-
-* Providers
-
-  Providers can be managed via the Mobile Codes Providers page:
-    Administer > Site configuration > Mobile Codes > Providers
-    http://[www.yoursite.com/path/to/drupal]/admin/settings/mobile_codes/providers
-
-
-* Presets
-
-  Presets can be managed via the Mobile Codes Presets page:
-    Administer > Site configuration > Mobile Codes > Presets
-    http://[www.yoursite.com/path/to/drupal]/admin/settings/mobile_codes/presets
-
-
-* Setttings
-
-  General settings (Shorten URL, etc) can be managed via the Mobile Codes Presets page:
-    Administer > Site configuration > Mobile Codes > Presets
-    http://[www.yoursite.com/path/to/drupal]/admin/settings/mobile_codes/presets
 
 
 Advanced configuration

@@ -99,6 +99,16 @@ function mobile_codes_install() {
 }
 
 /**
+ * Implements hook_uninstall().
+ */
+function mobile_codes_uninstall() {
+  drupal_uninstall_schema('mobile_codes');
+  variable_del('mobile_codes_block_node_url_preset');
+  variable_del('mobile_codes_block_user_vcard_preset');
+  variable_del('mobile_codes_settings');
+}
+
+/**
  * Implements hook_update_N().
  */
 function mobile_codes_update_6200() {
@@ -152,6 +162,9 @@ function mobile_codes_update_6200() {
       'name' => array('name')
     ),
   ));
+
+  // Delete variables.
+  variable_del('mobile_codes_flush');
 
   return $ret;
 }
