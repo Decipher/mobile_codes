@@ -18,6 +18,6 @@ function bouncer_mobile_codes_settings_alter($settings) {
 /**
  * Implements mobile_codes_data_TYPE_SETTING().
  */
-function mobile_codes_data_url_bouncer($text) {
-  $text = bouncer_url($text);
+function mobile_codes_data_url_bouncer(&$data) {
+  $data = bouncer_url($data);
 }

@@ -17,11 +17,11 @@ function mobile_codes_mobile_codes_settings_alter($settings) {
 /**
  * Implements mobile_codes_data_TYPE_SETTING().
  */
-function mobile_codes_data_url_alias($text) {
+function mobile_codes_data_url_alias(&$data) {
   global $base_url;
-  $path = str_replace("{$base_url}/", '', $text);
+  $path = str_replace("{$base_url}/", '', $data);
   $alias = drupal_get_path_alias($path);
-  $text = str_replace($path, $alias, $text);
+  $data = str_replace($path, $alias, $data);
 }
 
 /**

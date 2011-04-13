@@ -18,6 +18,6 @@ function shorten_mobile_codes_settings_alter($settings) {
 /**
  * Implements mobile_codes_data_TYPE_SETTING().
  */
-function mobile_codes_data_url_shorten($text) {
-  $text = shorten_url($text);
+function mobile_codes_data_url_shorten(&$data) {
+  $data = shorten_url($data);
 }

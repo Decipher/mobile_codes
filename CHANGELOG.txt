@@ -1,6 +1,7 @@
 Mobile Codes 6.x-2.x-dev, xxxx-xx-xx (Development release)
 --------------------------------
 
+- #1124644: Fixed deprecated pass-by-reference issues.
 - #1115308: Re-implemented hook_uninstall().
 - Added Custom Formatter example.
 - Added Rubik and Cube admin icon.

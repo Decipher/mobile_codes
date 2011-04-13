@@ -224,7 +224,7 @@ function mobile_codes_process_url($data, $attributes) {
  */
 function mobile_codes_process_data(&$data) {
   $settings = array();
-  $type = mobile_code_data_type($text);
+  $type = mobile_code_data_type($data);
   $defaults = variable_get('mobile_codes_settings', array(
     'url' => array(
       'alias' => 'alias',
@@ -233,7 +233,7 @@ function mobile_codes_process_data(&$data) {
 
   drupal_alter('mobile_codes_settings', $settings);
   if (is_array($settings[$type]) && count($settings[$type]) > 0) {
-    foreach ($settings[$type = mobile_code_data_type($text)] as $setting => $values) {
+    foreach ($settings[$type = mobile_code_data_type($data)] as $setting => $values) {
       if ($defaults['url'][$setting]) {
         $weight = isset($values['weight']) ? $values['weight'] : 0;
         $order[$weight] = is_array($order[$weight]) ? $order[$weight] : array();
@@ -246,7 +246,7 @@ function mobile_codes_process_data(&$data) {
       sort($settings);
       foreach ($settings as $setting) {
         if (function_exists($function = "mobile_codes_data_{$type}_{$setting}")) {
-          $function(&$text);
+          $function($data);
         }
       }
     }
