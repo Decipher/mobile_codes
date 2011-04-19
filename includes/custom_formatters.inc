@@ -8,15 +8,17 @@
  * Implements hook_custom_formatters_defaults().
  */
 function mobile_codes_custom_formatters_defaults() {
-  return array(
-    'example_mobile_codes' => array(
-      'name' => 'example_mobile_codes',
-      'label' => 'Example: Mobile Codes',
-      'field_types' => 'a:1:{i:0;s:4:"text";}',
-      'multiple' => '0',
-      'description' => 'An example Mobile Codes formatter',
-      'mode' => 'advanced',
-      'code' => '/**
+  $formatters = array();
+
+  // Example: Mobile Codes.
+  $formatters['example_mobile_codes'] = array(
+    'name' => 'example_mobile_codes',
+    'label' => 'Example: Mobile Codes',
+    'field_types' => 'a:1:{i:0;s:4:"text";}',
+    'multiple' => '0',
+    'description' => 'An example Mobile Codes formatter',
+    'mode' => 'advanced',
+    'code' => '/**
  * This is an example Advanced Custom Formatter to demonstrate how to output various items as a Mobile Code.
  */
 $preset = \'medium\';
@@ -59,7 +61,8 @@ if (module_exists(\'vcard\')) {
   return theme(\'mobilecode\', $vcard_text, array(\'#preset\' => $preset));
 }
 // */',
-      'status' => '0',
-    ),
+    'status' => '0',
   );
+
+  return $formatters;
 }

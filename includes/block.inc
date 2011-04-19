@@ -158,7 +158,7 @@ function mobile_codes_block_generate_code_form(&$form_state) {
     '#default_value' => is_array($form_state['values']) ? $form_state['values']['text'] : '',
   );
 
-  $form['submit'] = array(
+  $form['generate'] = array(
     '#type' => 'submit',
     '#value' => t('Generate'),
     '#ahah' => array(
