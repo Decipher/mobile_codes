@@ -1,4 +1,4 @@
-Mobile Codes 6.x-2.x-dev, xxxx-xx-xx (Development build)
+Mobile Codes 6.x-2.x-dev, xxxx-xx-xx (Development release)
 --------------------------------------------------------------------------------
 
 - #1125080: Fixed error when no options active.

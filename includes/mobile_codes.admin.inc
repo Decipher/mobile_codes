@@ -25,9 +25,9 @@ function mobile_codes_settings_form(&$form_state) {
 
     $order = array();
     if (is_array($settings[$type]) && count($settings[$type]) > 0) {
-      foreach ($settings[$type = mobile_code_data_type($text)] as $setting => $values) {
+      foreach ($settings[$type] as $setting => $values) {
         $weight = isset($values['weight']) ? $values['weight'] : 0;
-        $order[$weight] = is_array($order[$weight]) ? $order[$weight] : array();
+        $order[$weight] = isset($order[$weight]) ? $order[$weight] : array();
         $order[$weight][] = $setting;
       }
 

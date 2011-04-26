@@ -10,7 +10,7 @@
 function text_mobile_codes_theme_alter($items) {
   ctools_include('export');
   foreach (ctools_export_crud_load_all('mobile_codes_presets') as $preset) {
-    if (!$preset->disabled) {
+    if (isset($preset->disabled) && !$preset->disabled) {
       $items["mobile_codes_formatter_mobile_codes_text_{$preset->name}"] = array(
         'arguments' => array('element' => NULL),
         'function' => 'theme_mobile_codes_text_formatter',
