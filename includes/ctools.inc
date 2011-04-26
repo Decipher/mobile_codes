@@ -26,7 +26,7 @@ function mobile_codes_ctools_plugin_directory($module, $plugin) {
 /**
  * Implements hook_mobile_codes_theme_alter() on behalf of ctools.module.
  */
-function ctools_mobile_codes_theme_alter($items) {
+function ctools_mobile_codes_theme_alter(&$items) {
   $items['mobile_codes_providers_export_ui_form_parameters'] = array(
     'arguments' => array(
       'element' => array(),
@@ -46,7 +46,7 @@ function mobile_codes_presets_export_ui_form(&$form, &$form_state) {
     '#title' => t('Provider'),
     '#options' => array(),
     '#default_value' => $form_state['item']->provider,
-    '#ahah' => array(
+    '#ajax' => array(
       'path' => 'ahah/mobile_codes/presets/provider',
       'wrapper' => 'defaults-wrapper',
     ),

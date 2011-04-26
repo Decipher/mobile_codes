@@ -7,7 +7,7 @@
 /**
  * Implements hook_mobile_codes_default_mobile_codes_preset_alter() on behalf of block.module.
  */
-function block_mobile_codes_default_mobile_codes_preset_alter($export) {
+function block_mobile_codes_default_mobile_codes_preset_alter(&$export) {
   $preset = new stdClass;
   $preset->disabled = FALSE; /* Edit this to true to make a default preset disabled initially */
   $preset->api_version = 2;
@@ -20,6 +20,15 @@ function block_mobile_codes_default_mobile_codes_preset_alter($export) {
   );
 
   $export['block_node_url'] = $preset;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function mobile_codes_block_info() {
+  $blocks = array();
+  drupal_alter('mobile_codes_block_info', $blocks);
+  return $blocks;
 }
 
 /**
@@ -47,9 +56,9 @@ function mobile_codes_block($op = 'list', $delta = 0, $edit = array()) {
 }
 
 /**
- * Implements hook_mobile_codes_block_alter() on behalf of block.module.
+ * Implements hook_mobile_codes_block_info_alter() on behalf of block.module.
  */
-function block_mobile_codes_block_alter($blocks) {
+function block_mobile_codes_block_info_alter(&$blocks) {
   $blocks['node_url'] = array(
     'info' => t('Node URL'),
   );

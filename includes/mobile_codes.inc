@@ -7,7 +7,7 @@
 /**
  * Implements hook_mobile_codes_settings_alter().
  */
-function mobile_codes_mobile_codes_settings_alter($settings) {
+function mobile_codes_mobile_codes_settings_alter(&$settings) {
   $settings['url']['alias'] = array(
     'label' => t('Use path alias'),
     'description' => t('Use a path alias if it exists (e.g. node/1 -> section/title)'),
@@ -36,7 +36,7 @@ function mobile_codes_default_mobile_codes_preset() {
 /**
  * Implements hook_mobile_codes_default_mobile_codes_preset_alter().
  */
-function mobile_codes_mobile_codes_default_mobile_codes_preset_alter($export) {
+function mobile_codes_mobile_codes_default_mobile_codes_preset_alter(&$export) {
   $preset = new stdClass;
   $preset->disabled = FALSE; /* Edit this to true to make a default preset disabled initially */
   $preset->api_version = 2;
@@ -87,7 +87,7 @@ function mobile_codes_default_mobile_codes_provider() {
 /**
  * Implements hook_mobile_codes_default_mobile_codes_provider_alter().
  */
-function mobile_codes_mobile_codes_default_mobile_codes_provider_alter($export) {
+function mobile_codes_mobile_codes_default_mobile_codes_provider_alter(&$export) {
   $provider = new stdClass;
   $provider->disabled = FALSE; /* Edit this to true to make a default provider disabled initially */
   $provider->api_version = 2;

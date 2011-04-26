@@ -1,4 +1,25 @@
 name = "Mobile Codes"
 description = "Create <a href="http://en.wikipedia.org/wiki/Datamatrix">Datamatrix</a> or <a href="http://en.wikipedia.org/wiki/QR_Code">QR</a> codes via an input filter or a direct call in your template."
-core = 6.x
+core = 7.x
 dependencies[] = ctools
+files[] = mobile_codes.module
+files[] = includes/admin.inc
+files[] = includes/block.inc
+files[] = includes/bouncer.inc
+files[] = includes/content.inc
+files[] = includes/ctools.inc
+files[] = includes/custom_formatters.inc
+files[] = includes/features.inc
+files[] = includes/filefield.inc
+files[] = includes/filter.inc
+files[] = includes/help.inc
+files[] = includes/libraries.inc
+files[] = includes/libraries.phpqrcode.inc
+files[] = includes/link.inc
+files[] = includes/mobile_codes.admin.inc
+files[] = includes/mobile_codes.inc
+files[] = includes/mobile_tools.inc
+files[] = includes/shorten.inc
+files[] = includes/system.inc
+files[] = includes/text.inc
+files[] = includes/vcard.inc

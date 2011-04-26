@@ -30,44 +30,28 @@ function mobile_codes_init() {
 /**
  * Implements hook_perm().
  */
-function mobile_codes_perm() {
-  return array('administer mobile codes');
+function mobile_codes_permission() {
+  return array(
+    'administer mobile codes' => array(
+      'title' => t('Administer Mobile Codes'),
+      'description' => t('Add, edit or delete Mobile Codes presets, providers and settings.')
+    ),
+  );
 }
 
 /**
  * Implements hook_flush_caches().
  */
 function mobile_codes_flush_caches() {
-  _mobile_codes_recursive_delete(file_directory_path() . '/mobile_codes');
+  file_unmanaged_delete_recursive('public://mobile_codes');
   return array();
-}
-
-/**
- * Recursively delete files and folders.
- *
- * @param $directory
- *   The directory to recurse through.
- */
-function _mobile_codes_recursive_delete($directory) {
-  if (is_dir($directory)) {
-    foreach (array_diff(scandir($directory), array('.', '..')) as $file) {
-      $file = "{$directory}/{$file}";
-      if (is_dir($file)) {
-        _mobile_codes_recursive_delete($file);
-        @rmdir($file);
-      }
-      else {
-        @unlink($file);
-      }
-    }
-  }
 }
 
 /**
  * Implements hook_mobile_codes_menu_alter().
  */
-function mobile_codes_mobile_codes_menu_alter($items) {
-  $items['admin/settings/mobile_codes/settings'] = array(
+function mobile_codes_mobile_codes_menu_alter(&$items) {
+  $items['admin/config/content/mobile_codes/settings'] = array(
     'title' => 'Settings',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('mobile_codes_settings_form'),
@@ -91,27 +75,27 @@ function mobile_codes_mobile_codes_menu_alter($items) {
  */
 function mobile_codes_menu_alter(&$items) {
   // @TODO - Make this better.
-  if (isset($items['admin/settings/mobile_codes/presets'])) {
-    $items['admin/settings/mobile_codes'] = array_merge(
-      $items['admin/settings/mobile_codes/presets'],
+  if (isset($items['admin/config/content/mobile_codes/presets'])) {
+    $items['admin/config/content/mobile_codes'] = array_merge(
+      $items['admin/config/content/mobile_codes/presets'],
       array(
         'title' => 'Mobile Codes',
         'type' => MENU_NORMAL_ITEM,
       )
     );
-    $items['admin/settings/mobile_codes/presets']['type'] = MENU_DEFAULT_LOCAL_TASK;
-    $items['admin/settings/mobile_codes/presets']['parent'] = 'admin/settings/mobile_codes';
-    $items['admin/settings/mobile_codes/providers']['type'] = MENU_LOCAL_TASK;
-    $items['admin/settings/mobile_codes/providers']['parent'] = 'admin/settings/mobile_codes';
+    $items['admin/config/content/mobile_codes/presets']['type'] = MENU_DEFAULT_LOCAL_TASK;
+    $items['admin/config/content/mobile_codes/presets']['parent'] = 'admin/config/content/mobile_codes';
+    $items['admin/config/content/mobile_codes/providers']['type'] = MENU_LOCAL_TASK;
+    $items['admin/config/content/mobile_codes/providers']['parent'] = 'admin/config/content/mobile_codes';
   }
 }
 
 /**
  * Implements hook_mobile_codes_theme_alter().
  */
-function mobile_codes_mobile_codes_theme_alter($items) {
+function mobile_codes_mobile_codes_theme_alter(&$items) {
   $items['mobilecode'] = array(
-    'arguments' => array(
+    'variables' => array(
       'data' => NULL,
       'attributes' => array(),
       'image_alt' => '',

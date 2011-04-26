@@ -31,7 +31,7 @@ function _mobile_codes_get_libraries() {
 /**
  * Implements hook_mobile_codes_menu_alter() on behalf of libraries.inc.
  */
-function libraries_mobile_codes_menu_alter($items) {
+function libraries_mobile_codes_menu_alter(&$items) {
   foreach (_mobile_codes_get_libraries() as $library => $file) {
     if (function_exists($function = "mobile_codes_libraries_{$library}_menu_alter")) {
       $function($items);
@@ -42,7 +42,7 @@ function libraries_mobile_codes_menu_alter($items) {
 /**
  * Implements hook_mobile_codes_default_mobile_codes_provider_alter() on behalf of libraries.inc.
  */
-function libraries_mobile_codes_default_mobile_codes_provider_alter($export) {
+function libraries_mobile_codes_default_mobile_codes_provider_alter(&$export) {
   foreach (_mobile_codes_get_libraries() as $library => $file) {
     if (function_exists($function = "mobile_codes_libraries_{$library}_default_mobile_codes_provider_alter")) {
       $function($export);

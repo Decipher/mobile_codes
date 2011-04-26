@@ -7,7 +7,7 @@
 /**
  * Implements hook_mobile_codes_default_mobile_codes_preset_alter() on behalf of vcard.module.
  */
-function vcard_mobile_codes_default_mobile_codes_preset_alter($export) {
+function vcard_mobile_codes_default_mobile_codes_preset_alter(&$export) {
   $preset = new stdClass;
   $preset->disabled = FALSE; /* Edit this to true to make a default preset disabled initially */
   $preset->api_version = 2;
@@ -25,7 +25,7 @@ function vcard_mobile_codes_default_mobile_codes_preset_alter($export) {
 /**
  * Implements hook_mobile_codes_block_alter() on behalf of vcard.module.
  */
-function vcard_mobile_codes_block_alter($blocks) {
+function vcard_mobile_codes_block_info_alter(&$blocks) {
   $blocks['user_vcard'] = array(
     'info' => t('User vCard'),
   );

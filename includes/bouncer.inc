@@ -7,7 +7,7 @@
 /**
  * Implements hook_mobile_codes_settings_alter() on behalf of bouncer.module.
  */
-function bouncer_mobile_codes_settings_alter($settings) {
+function bouncer_mobile_codes_settings_alter(&$settings) {
   $settings['url']['bouncer'] = array(
     'label' => t('Track URL'),
     'description' => t('Track URL with the Bouncer module - !configure', array('!configure' => l(t('configure'), 'admin/settings/bouncer'))),

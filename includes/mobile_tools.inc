@@ -7,7 +7,7 @@
 /**
  * Implements hook_mobile_codes_settings_alter() on behalf of mobile_tools.module.
  */
-function mobile_tools_mobile_codes_settings_alter($settings) {
+function mobile_tools_mobile_codes_settings_alter(&$settings) {
   $settings['url']['mobile_tools'] = array(
     'label' => t('Use Mobile URL'),
     'description' => t('Use Mobile URL defined via the Mobile Tools module - !configure', array('!configure' => l(t('configure'), 'admin/settings/mobile-tools'))),

@@ -5,8 +5,8 @@
  */
 
 /**
- * Implements hook_mobile_codes_block_alter() on behalf of block.module.
+ * Implements hook_mobile_codes_block_info_alter() on behalf of block.module.
  */
-function admin_mobile_codes_block_alter($blocks) {
+function admin_mobile_codes_block_info_alter(&$blocks) {
   $blocks['generate_code']['admin'] = TRUE;
 }

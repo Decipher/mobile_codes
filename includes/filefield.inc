@@ -7,7 +7,7 @@
 /**
  * Implements hook_mobile_codes_theme_alter() on behalf of filefield.module.
  */
-function filefield_mobile_codes_theme_alter($items) {
+function filefield_mobile_codes_theme_alter(&$items) {
   ctools_include('export');
   foreach (ctools_export_crud_load_all('mobile_codes_presets') as $preset) {
     if (!$preset->disabled) {
@@ -23,7 +23,7 @@ function filefield_mobile_codes_theme_alter($items) {
 /**
  * Implements hook_mobile_codes_field_formatter_info_alter() on behalf of filefield.module.
  */
-function filefield_mobile_codes_field_formatter_info_alter($formatters) {
+function filefield_mobile_codes_field_formatter_info_alter(&$formatters) {
   ctools_include('export');
   foreach (ctools_export_crud_load_all('mobile_codes_presets') as $preset) {
     if (!$preset->disabled) {

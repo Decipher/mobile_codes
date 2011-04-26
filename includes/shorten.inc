@@ -7,7 +7,7 @@
 /**
  * Implements hook_mobile_codes_settings_alter() on behalf of shorten.module.
  */
-function shorten_mobile_codes_settings_alter($settings) {
+function shorten_mobile_codes_settings_alter(&$settings) {
   $settings['url']['shorten'] = array(
     'label' => t('Shorten URL'),
     'description' => t('Create a short URL with the Shorten module - !configure', array('!configure' => l(t('configure'), 'admin/settings/shorten'))),
