@@ -241,12 +241,14 @@ function mobile_codes_process_data(&$data) {
       }
     }
 
-    ksort($order);
-    foreach ($order as $settings) {
-      sort($settings);
-      foreach ($settings as $setting) {
-        if (function_exists($function = "mobile_codes_data_{$type}_{$setting}")) {
-          $function($data);
+    if ($order) {
+      ksort($order);
+      foreach ($order as $settings) {
+        sort($settings);
+        foreach ($settings as $setting) {
+          if (function_exists($function = "mobile_codes_data_{$type}_{$setting}")) {
+            $function($data);
+          }
         }
       }
     }
