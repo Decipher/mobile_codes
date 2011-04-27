@@ -121,7 +121,7 @@ function mobile_codes_generate($url) {
     $request = drupal_http_request($url);
     if ($request->code == 200) {
       if (file_prepare_directory($dir = 'public://mobile_codes', FILE_CREATE_DIRECTORY)) {
-        file_save_data($request->data, $file);
+        file_unmanaged_save_data($request->data, $file);
       }
     }
 
