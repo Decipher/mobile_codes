@@ -83,7 +83,7 @@ function mobile_codes_block_user_vcard_view($edit) {
 
     return array(
       'subject' => t('Mobile Codes: User vCard'),
-      'content' => theme('mobilecode', $vcard_text, array('#preset' => variable_get('mobile_codes_block_user_vcard_preset', 'block_user_vcard')))
+      'content' => theme('mobilecode', array('data' => $vcard_text, 'attributes' => array('#preset' => variable_get('mobile_codes_block_user_vcard_preset', 'block_user_vcard'))))
     );
   }
 }

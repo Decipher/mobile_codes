@@ -32,30 +32,6 @@ function mobile_codes_block_info() {
 }
 
 /**
- * Implements hook_block().
- */
-function mobile_codes_block($op = 'list', $delta = 0, $edit = array()) {
-  switch ($op) {
-    case 'list':
-      $blocks = array();
-      drupal_alter('mobile_codes_block', $blocks);
-      return $blocks;
-
-    case 'save':
-      if (function_exists($function = "mobile_codes_block_{$delta}_{$op}")) {
-        $function($edit);
-      }
-      break;
-
-    default:
-      if (function_exists($function = "mobile_codes_block_{$delta}_{$op}")) {
-        return $function($edit);
-      }
-      return array();
-  }
-}
-
-/**
  * Implements hook_mobile_codes_block_info_alter() on behalf of block.module.
  */
 function block_mobile_codes_block_info_alter(&$blocks) {
@@ -69,9 +45,39 @@ function block_mobile_codes_block_info_alter(&$blocks) {
 }
 
 /**
+ * Implements hook_block_configure().
+ */
+function mobile_codes_block_configure($delta) {
+  if (function_exists($function = "mobile_codes_block_{$delta}_configure")) {
+    return $function();
+  }
+  return array();
+}
+
+
+/**
+ * Implements hook_block_save().
+ */
+function mobile_codes_block_save($delta = 0, $edit = array()) {
+  if (function_exists($function = "mobile_codes_block_{$delta}_save")) {
+    $function($edit);
+  }
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function mobile_codes_block_view($delta) {
+  if (function_exists($function = "mobile_codes_block_{$delta}_view")) {
+    return $function();
+  }
+  return array();
+}
+
+/**
  *
  */
-function mobile_codes_block_node_url_configure($edit) {
+function mobile_codes_block_node_url_configure() {
   $form = array();
 
   $form['preset'] = array(
@@ -100,11 +106,11 @@ function mobile_codes_block_node_url_save($edit) {
 /**
  *
  */
-function mobile_codes_block_node_url_view($edit) {
+function mobile_codes_block_node_url_view() {
   if (arg(0) == 'node' && arg(1) != '' && arg(2) == '') {
     return array(
       'subject' => t('Node URL'),
-      'content' => theme('mobilecode', url('node/' . arg(1), array('absolute' => TRUE, 'alias' => TRUE)), array('#preset' => variable_get('mobile_codes_block_node_url_preset', 'block_node_url')))
+      'content' => theme('mobilecode', array('data' => url('node/' . arg(1), array('absolute' => TRUE, 'alias' => TRUE)), 'attributes' => array('#preset' => variable_get('mobile_codes_block_node_url_preset', 'block_node_url'))))
     );
   }
 }
@@ -112,7 +118,7 @@ function mobile_codes_block_node_url_view($edit) {
 /**
  *
  */
-function mobile_codes_block_generate_code_view($edit) {
+function mobile_codes_block_generate_code_view() {
   return array(
     'subject' => t('Mobile Code generator'),
     'content' => drupal_get_form('mobile_codes_block_generate_code_form'),
@@ -122,17 +128,17 @@ function mobile_codes_block_generate_code_view($edit) {
 /**
  *
  */
-function mobile_codes_block_generate_code_form(&$form_state) {
+function mobile_codes_block_generate_code_form($form, &$form_state) {
   $form = array();
 
-  if (is_array($form_state['values'])) {
+  if (isset($form_state['values'])) {
     $form['mobile_code'] = array(
       '#title' => t('Output'),
       '#type' => 'fieldset',
     );
 
     $form['mobile_code']['sample'] = array(
-      '#value' => theme('mobilecode', $form_state['values']['text'], array('#preset' => $form_state['values']['preset'])),
+      '#value' => theme('mobilecode', array('data' => $form_state['values']['text'], 'attributes' => array('#preset' => $form_state['values']['preset']))),
     );
 
     $form['mobile_code']['filter'] = array(
@@ -144,7 +150,7 @@ function mobile_codes_block_generate_code_form(&$form_state) {
     $form['mobile_code']['theme'] = array(
       '#type' => 'textfield',
       '#title' => t('Theme'),
-      '#value' => "theme('mobile_code', '{$form_state['values']['text']}', array('#preset' => '{$form_state['values']['preset']}'));",
+      '#value' => "theme('mobilecode', array('data' => '{$form_state['values']['text']}', 'attributes' => array('#preset' => '{$form_state['values']['preset']}')));",
     );
   }
 
@@ -152,7 +158,7 @@ function mobile_codes_block_generate_code_form(&$form_state) {
     '#type' => 'select',
     '#title' => t('Preset'),
     '#options' => array(),
-    '#default_value' => is_array($form_state['values']) ? $form_state['values']['preset'] : array(),
+    '#default_value' => isset($form_state['values']) ? $form_state['values']['preset'] : array(),
   );
   ctools_include('export');
   foreach (ctools_export_crud_load_all('mobile_codes_presets') as $preset) {
@@ -164,7 +170,7 @@ function mobile_codes_block_generate_code_form(&$form_state) {
   $form['text'] = array(
     '#type' => 'textarea',
     '#title' => t('Data'),
-    '#default_value' => is_array($form_state['values']) ? $form_state['values']['text'] : '',
+    '#default_value' => isset($form_state['values']) ? $form_state['values']['text'] : '',
   );
 
   $form['generate'] = array(

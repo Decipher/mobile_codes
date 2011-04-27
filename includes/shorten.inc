@@ -10,7 +10,7 @@
 function shorten_mobile_codes_settings_alter(&$settings) {
   $settings['url']['shorten'] = array(
     'label' => t('Shorten URL'),
-    'description' => t('Create a short URL with the Shorten module - !configure', array('!configure' => l(t('configure'), 'admin/settings/shorten'))),
+    'description' => t('Create a short URL with the Shorten module - !configure', array('!configure' => l(t('configure'), 'admin/config/shorten'))),
     'weight' => 10,
   );
 }

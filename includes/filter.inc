@@ -56,7 +56,7 @@ function mobile_codes_filter_process($text, $format) {
           $attr[$attribute[1]] = $attribute[2];
         }
       }
-      $text = str_replace($match[0], theme('mobilecode', $match[2], $attr), $text);
+      $text = str_replace($match[0], theme('mobilecode', array('data' => $match[2], 'attributes' => $attr)), $text);
     }
   }
 

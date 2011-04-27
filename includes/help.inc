@@ -17,7 +17,7 @@ function mobile_codes_help($path, $arg) {
           break;
         }
       }
-      $mobile_code = isset($active_preset) ? theme('mobilecode', 'http://stuar.tc/lark/s/module/s/mobile_codes', array('#preset' => $active_preset->name), '', '', array('style' => 'float: right;')) : '';
+      $mobile_code = isset($active_preset) ? theme('mobilecode', array('data' => 'http://stuar.tc/lark/s/module/s/mobile_codes', 'attributes' => array('#preset' => $active_preset->name), 'image_attributes' => array('style' => 'float: right;'))) : '';
 
       return $mobile_code
            . "<p>\n"
@@ -64,7 +64,7 @@ function mobile_codes_help($path, $arg) {
            . '    <strong>' . t('theme_mobilecode()') . "</strong>\n"
            . "    <p>\n"
            . '      ' . t('For use in code, the theme function can be called directly with the following format') . ":<br />\n"
-           . "      <code>theme('mobilecode', <strong>\$data</strong>, array('#preset' => <strong>\$preset</strong>))</code>\n"
+           . "      <code>theme('mobilecode', array('data' => <strong>\$data</strong>, 'attributes' => array('#preset' => <strong>\$preset</strong>)))</code>\n"
            . "    </p>\n"
            . "    <p>&nbsp;</p>\n"
            . "  </li>\n"

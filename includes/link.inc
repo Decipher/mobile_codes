@@ -37,6 +37,6 @@ function link_mobile_codes_field_formatter_info_alter(&$formatters) {
 
 function theme_mobile_codes_link_formatter($element) {
   if (!mobile_codes_content_field_is_empty($element)) {
-    return theme('mobilecode', $element['#item']['display_url'], array('#preset' => drupal_substr($element['#formatter'], 18)));
+    return theme('mobilecode', array('data' => $element['#item']['display_url'], 'attributes' => array('#preset' => drupal_substr($element['#formatter'], 18))));
   }
 }

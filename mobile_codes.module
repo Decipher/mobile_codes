@@ -117,10 +117,10 @@ function mobile_codes_mobile_codes_theme_alter(&$items) {
  *   it isn't.
  */
 function mobile_codes_generate($url) {
-  if (!file_exists($file = file_directory_path() . '/mobile_codes/' . md5(serialize($url)) . '.png')) {
+  if (!file_exists($file = 'public://mobile_codes/' . md5(serialize($url)) . '.png')) {
     $request = drupal_http_request($url);
     if ($request->code == 200) {
-      if (file_check_directory($dir = file_directory_path() . '/mobile_codes', FILE_CREATE_DIRECTORY)) {
+      if (file_prepare_directory($dir = 'public://mobile_codes', FILE_CREATE_DIRECTORY)) {
         file_save_data($request->data, $file);
       }
     }
@@ -218,9 +218,9 @@ function mobile_codes_process_data(&$data) {
   drupal_alter('mobile_codes_settings', $settings);
   if (is_array($settings[$type]) && count($settings[$type]) > 0) {
     foreach ($settings[$type = mobile_code_data_type($data)] as $setting => $values) {
-      if ($defaults['url'][$setting]) {
+      if (isset($defaults['url'][$setting])) {
         $weight = isset($values['weight']) ? $values['weight'] : 0;
-        $order[$weight] = is_array($order[$weight]) ? $order[$weight] : array();
+        $order[$weight] = isset($order[$weight]) ? $order[$weight] : array();
         $order[$weight][] = $setting;
       }
     }
@@ -293,10 +293,10 @@ function mobile_codes_ahah($section, $op = NULL) {
 /**
  * Theme function for displaying Mobile Codes
  */
-function theme_mobilecode($data, $attributes, $image_alt = '', $image_title = '', $image_attributes = NULL, $image_getsize = TRUE) {
-  if ($url = mobile_codes_process_url($data, $attributes)) {
+function theme_mobilecode($variables) {
+  if ($url = mobile_codes_process_url($variables['data'], $variables['attributes'])) {
     if ($path = mobile_codes_generate($url)) {
-      return theme('image', $path, $image_alt, $image_title, $image_attributes, $image_getsize);
+      return theme('image', array('path' => $path, 'alt' => $variables['image_alt'], 'title' => $variables['image_title'], 'attributes' => $variables['image_attributes'], 'getsize' => $variables['image_getsize']));
     }
   }
   // @TODO - Set error.
