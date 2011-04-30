@@ -54,7 +54,6 @@ function mobile_codes_block_configure($delta) {
   return array();
 }
 
-
 /**
  * Implements hook_block_save().
  */
@@ -75,7 +74,7 @@ function mobile_codes_block_view($delta) {
 }
 
 /**
- *
+ * Node URL block configuration form.
  */
 function mobile_codes_block_node_url_configure() {
   $form = array();
@@ -97,14 +96,14 @@ function mobile_codes_block_node_url_configure() {
 }
 
 /**
- *
+ * Node URL block save callback.
  */
 function mobile_codes_block_node_url_save($edit) {
   variable_set('mobile_codes_block_node_url_preset', $edit['preset']);
 }
 
 /**
- *
+ * Node URL block view callback.
  */
 function mobile_codes_block_node_url_view() {
   if (arg(0) == 'node' && arg(1) != '' && arg(2) == '') {
@@ -116,7 +115,7 @@ function mobile_codes_block_node_url_view() {
 }
 
 /**
- *
+ * Code generator block view callback.
  */
 function mobile_codes_block_generate_code_view() {
   return array(
@@ -126,7 +125,7 @@ function mobile_codes_block_generate_code_view() {
 }
 
 /**
- *
+ * Code generator block form.
  */
 function mobile_codes_block_generate_code_form($form, &$form_state) {
   $form = array();
@@ -186,14 +185,14 @@ function mobile_codes_block_generate_code_form($form, &$form_state) {
 }
 
 /**
- *
+ * Code generator block form AJAX callback.
  */
 function mobile_codes_block_generate_code_form_js($form, $form_state) {
   return $form['mobile_code'];
 }
 
 /**
- *
+ * Code generator block form submit callback.
  */
 function mobile_codes_block_generate_code_form_submit($form, &$form_state) {
   $form_state['rebuild'] = TRUE;

@@ -21,10 +21,3 @@ function mobile_codes_theme() {
   drupal_alter('mobile_codes_theme', $items);
   return $items;
 }
-
-/**
- * Implements hook_form_alter().
- */
-function mobile_codes_form_alter(&$form, &$form_state, $form_id) {
-  drupal_alter('mobile_codes_form_alter', $form, $form_state, $form_id);
-}

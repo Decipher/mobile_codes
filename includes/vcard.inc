@@ -32,9 +32,9 @@ function vcard_mobile_codes_block_info_alter(&$blocks) {
 }
 
 /**
- *
+ * vCard block configuration form.
  */
-function mobile_codes_block_user_vcard_configure($edit) {
+function mobile_codes_block_user_vcard_configure() {
   $form = array();
 
   $form['preset'] = array(
@@ -54,16 +54,16 @@ function mobile_codes_block_user_vcard_configure($edit) {
 }
 
 /**
- *
+ * vCard block save callback.
  */
 function mobile_codes_block_user_vcard_save($edit) {
   variable_set('mobile_codes_block_user_vcard_preset', $edit['preset']);
 }
 
 /**
- *
+ * vCard block view callback.
  */
-function mobile_codes_block_user_vcard_view($edit) {
+function mobile_codes_block_user_vcard_view() {
   switch (arg(0)) {
     case 'node':
       if (arg(2) == '') {
