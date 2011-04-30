@@ -16,11 +16,11 @@ Features
     * One (1) Internal Provider (see below).
     * Three (3) to five (5) Presets (based on installed modules).
 * Render Mobile Codes via:
-  * CCK/Views formatters:
-    * CCK Text module.
-    * FileField module.
+  * Field/Views formatters:
+    * File module.
+    * Image modules.
     * Link module.
-    * plus an example Custom Formatter for extended support.
+    * Text module.
   * Input filter.
   * Drupal API Theme() call.
 * Blocks:
@@ -30,7 +30,6 @@ Features
   * Mobile Code generator - An Admin module optimized helper block.
 * Support for:
   * Mobile Tools module - Redirect internal Mobile Code URLs to Mobile site URL.
-  * Redirecting Click Bouncer module - Track URLs accessed via Mobile Codes.
   * Shorten module - Shorten URLs in Mobile Codes.
 
 
@@ -43,7 +42,6 @@ Required modules
 Recommended modules
 --------------------------------------------------------------------------------
 
-* Custom Formatters module.
 * Libraries API module.
 
 
@@ -51,8 +49,8 @@ Configuration
 --------------------------------------------------------------------------------
 
 All configuration for Mobile Codes can be found at:
-  Administer > Site configuration > Mobile Codes
-  http://[www.yoursite.com/path/to/drupal]/admin/settings/mobile_codes
+  Administer > Configuration > Content authoring > Mobile Codes
+  http://[www.yoursite.com/path/to/drupal]/admin/config/content/mobile_codes
 
 
 Advanced configuration
@@ -71,7 +69,7 @@ Advanced configuration
 
   4. Clear cached data from the Perfomance page.
        Administer > Site configuration > Performance
-       http://[www.yoursite.com/path/to/drupal]/admin/settings/performance
+       http://[www.yoursite.com/path/to/drupal]/admin/config/development/performance
 
 
   Note: Mobile Codes will automatically detect the PHP QR Code library once

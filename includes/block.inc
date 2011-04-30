@@ -88,7 +88,7 @@ function mobile_codes_block_node_url_configure() {
   );
   ctools_include('export');
   foreach (ctools_export_crud_load_all('mobile_codes_presets') as $preset) {
-    if (!$preset->disabled) {
+    if (isset($preset->disabled) && !$preset->disabled) {
       $form['preset']['#options'][$preset->name] = $preset->name;
     }
   }
@@ -138,7 +138,7 @@ function mobile_codes_block_generate_code_form($form, &$form_state) {
     );
 
     $form['mobile_code']['sample'] = array(
-      '#value' => theme('mobilecode', array('data' => $form_state['values']['text'], 'attributes' => array('#preset' => $form_state['values']['preset']))),
+      '#markup' => theme('mobilecode', array('data' => $form_state['values']['text'], 'attributes' => array('#preset' => $form_state['values']['preset']))),
     );
 
     $form['mobile_code']['filter'] = array(
@@ -176,9 +176,9 @@ function mobile_codes_block_generate_code_form($form, &$form_state) {
   $form['generate'] = array(
     '#type' => 'submit',
     '#value' => t('Generate'),
-    '#ahah' => array(
-      'path' => 'ahah/mobile_codes/generator',
-      'wrapper' => 'mobile-codes-block-generate-code-form',
+    '#ajax' => array(
+      'callback' => 'mobile_codes_block_generate_code_form_js',
+      'wrapper' => 'edit-mobile-code',
     ),
   );
 
@@ -188,11 +188,13 @@ function mobile_codes_block_generate_code_form($form, &$form_state) {
 /**
  *
  */
-function mobile_codes_ahah_generator($form_id, $form, $form_state, $args, $form_build_id) {
-  // Process the form with drupal_process_form(), which calls the submit
-  // handlers that puts whatever was worthy of keeping in the $form_state.
-  drupal_process_form($form_id, $form, $form_state);
-  $form = drupal_rebuild_form($form_id, $form_state, $args, $form_build_id);
+function mobile_codes_block_generate_code_form_js($form, $form_state) {
+  return $form['mobile_code'];
+}
 
-  return drupal_render($form);
+/**
+ *
+ */
+function mobile_codes_block_generate_code_form_submit($form, &$form_state) {
+  $form_state['rebuild'] = TRUE;
 }

@@ -5,47 +5,25 @@
  */
 
 /**
- * Implements hook_filter_tips().
+ * Implements hook_filter_info().
  */
-function mobile_codes_filter_tips($delta, $format, $long = FALSE) {
-  return t('
-    Create a Mobile Code using the following format:<br />
-    [mobilecode #preset="<em>preset</em>"]<em>content</em>[/mobilecode]
-  ');
+function mobile_codes_filter_info() {
+  $filters = array();
+
+  $filters['mobile_codes'] = array(
+    'title' => t('Mobile Codes'),
+    'process callback' => 'mobile_codes_filter_process',
+    'tips callback'  => 'mobile_codes_filter_tips',
+    'weight' => -10,
+  );
+
+  return $filters;
 }
 
 /**
- * Implements hook_filter().
+ * Mobile Codes filter process callback.
  */
-function mobile_codes_filter($op, $delta = 0, $format = -1, $text = '') {
-  switch ($op) {
-    case 'list':
-      return array(0 => t('Mobile Codes filter'));
-
-    case 'description':
-      return t('
-        Create a Mobile Code using the following format:<br />
-        [mobilecode #preset="<em>preset</em>"]<em>content</em>[/mobilecode]
-      ');
-
-    case 'prepare':
-      return $text;
-
-    case 'process':
-      return mobile_codes_filter_process($text, $format);
-
-    case 'settings':
-      return $text;
-
-    default:
-      return $text;
-  }
-}
-
-/**
- *
- */
-function mobile_codes_filter_process($text, $format) {
+function mobile_codes_filter_process($text, $filter, $format, $langcode, $cache, $cache_id) {
   $attr = '';
 
   if (preg_match_all('/\[mobilecode([^]]*)\]([^[]*)\[\/mobilecode\]/', $text, $codes, PREG_SET_ORDER)) {
@@ -61,4 +39,11 @@ function mobile_codes_filter_process($text, $format) {
   }
 
   return $text;
+}
+
+/**
+ * Mobile Codes filter tips callback.
+ */
+function mobile_codes_filter_tips($filter, $format, $long = FALSE) {
+  return t('Create a Mobile Code using the following format') . ': [mobilecode #preset="<em>preset</em>"]<em>content</em>[/mobilecode]';
 }

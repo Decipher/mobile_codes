@@ -2,6 +2,7 @@ name = "Mobile Codes"
 description = "Create <a href="http://en.wikipedia.org/wiki/Datamatrix">Datamatrix</a> or <a href="http://en.wikipedia.org/wiki/QR_Code">QR</a> codes via an input filter or a direct call in your template."
 core = 7.x
 dependencies[] = ctools
+configure = admin/config/content/mobile_codes
 files[] = mobile_codes.module
 files[] = includes/admin.inc
 files[] = includes/block.inc

@@ -18,7 +18,6 @@ $plugin = array(
   'title plural proper' => t('Providers'),
   'form' => array(
     'settings' => 'mobile_codes_providers_export_ui_form',
-    'validate' => 'mobile_codes_providers_export_ui_form_validate',
     'submit' => 'mobile_codes_providers_export_ui_form_submit',
   ),
 );

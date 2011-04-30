@@ -12,7 +12,7 @@ function mobile_codes_help($path, $arg) {
     case 'admin/help#mobile_codes':
       ctools_include('export');
       foreach (ctools_export_crud_load_all('mobile_codes_presets') as $preset) {
-        if (!$preset->disabled) {
+        if (isset($preset->disabled) && !$preset->disabled) {
           $active_preset = $preset;
           break;
         }
@@ -30,33 +30,34 @@ function mobile_codes_help($path, $arg) {
            . "</p>\n"
            . "<ul>\n"
            . "  <li>\n"
-           . '    <strong>' . t('CCK/Views formatters') . "</strong>\n"
+           . '    <strong>' . t('Field/Views formatters') . "</strong>\n"
            . "    <p>\n"
-           . '      ' . t('A CCK/Views formatter is automatically created for each Mobile Codes Preset, the formatters are available for use with the following field types') . ":\n"
+           . '      ' . t('A Field/Views formatter is automatically created for each Mobile Codes Preset, the formatters are available for use with the following field types') . ":\n"
            . "    </p>\n"
            . "    <ul>\n"
-           . '      <li>' . t('!cck Text field', array('!cck' => l('CCK', 'http://drupal.org/project/cck'))) . "</li>\n"
+           . '      <li>' . t('File field') . "</li>\n"
+           . '      <li>' . t('Image field') . "</li>\n"
            . '      <li>' . t('!link module field', array('!link' => l('Link', 'http://drupal.org/project/link'))) . "</li>\n"
-           . '      <li>' . t('!filefield module field', array('!filefield' => l('FileField', 'http://drupal.org/project/filefield'))) . "</li>\n"
+           . '      <li>' . t('Text field') . "</li>\n"
            . "    </ul>\n"
            . "    <p>\n"
-           . '      ' . t('Formatters can be assigned either via a Content types Display settings page or on a View.') . "\n"
+           . '      ' . t('Formatters can be assigned either via a Field UI Display settings page or on a View.') . "\n"
            . "    </p>\n"
-           . "    <p>\n"
-           . '      ' . t('Additionally, a !custom_formatters example is provided to demonstrates how to provide support for additional CCK fields.', array('!custom_formatters' => l('Custom Formatters', 'http://drupal.org/project/custom_foramtters'))) . "\n"
-           . "    </p>\n"
+           //. "    <p>\n"
+           //. '      ' . t('Additionally, a !custom_formatters example is provided to demonstrates how to provide support for additional fields.', array('!custom_formatters' => l('Custom Formatters', 'http://drupal.org/project/custom_foramtters'))) . "\n"
+           //. "    </p>\n"
            . "    <p>&nbsp;</p>\n"
            . "  </li>\n"
            . "  <li>\n"
            . '    <strong>' . t('Input filter') . "</strong>\n"
            . "    <p>\n"
-           . '      ' . t('For use inside a Node body, or any Text fields using an Input format, Mobile Codes can be generated using the following format') . ":<br />\n"
+           . '      ' . t('For use inside a Node body, or any Text fields using an Text format, Mobile Codes can be generated using the following format') . ":<br />\n"
            . "      <code>\n"
            . "        [mobilecode #preset='<strong>preset</strong>']<strong>data</strong>[/mobilecode]\n"
            . "      </code>\n"
            . "    </p>\n"
            . "    <p>\n"
-           . '      <strong>' . t('Note') . ':</strong> ' . t('Be sure to enable the Mobile Codes filter on all required Input formats.') . "\n"
+           . '      <strong>' . t('Note') . ':</strong> ' . t('Be sure to enable the Mobile Codes filter on all required Text formats.') . "\n"
            . "    </p>\n"
            . "    <p>&nbsp;</p>\n"
            . "  </li>\n"
@@ -73,7 +74,7 @@ function mobile_codes_help($path, $arg) {
            . '<h3>' . t('Geneal configuration') . "</h3>\n"
            . "<p>\n"
            . '  ' . t('General configuration for Mobile Codes can be found at:') . "<br />\n"
-           . '  &nbsp;&nbsp;' . l(url('admin/settings/mobile_codes', array('absolute' => TRUE)), url('admin/settings/mobile_codes', array('absolute' => TRUE))) . "\n"
+           . '  &nbsp;&nbsp;' . l(url('admin/config/content/mobile_codes', array('absolute' => TRUE)), url('admin/config/content/mobile_codes', array('absolute' => TRUE))) . "\n"
            . "</p>\n"
            . "<p>\n"
            . '  ' . t('There are three sections in the Mobile Code configuration') . ":\n"
@@ -140,7 +141,7 @@ function mobile_codes_help($path, $arg) {
            . '    ' . t('Extract the PHP QR Code library to your Libraries directory.') . "<br />\n"
            . "    <strong>e.g.,</strong> sites/all/libraries/phpqrcode\n"
            . "  </li>\n"
-           . '  <li>' . t('Clear cached data from the !performance page.', array('!performance' => l(t('Performance'), 'admin/settings/performance'))) . "</li>\n"
+           . '  <li>' . t('Clear cached data from the !performance page.', array('!performance' => l(t('Performance'), 'admin/config/development/performance'))) . "</li>\n"
            . "</ol>\n"
            . "<p>&nbsp;</p>\n";
   }
