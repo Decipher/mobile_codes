@@ -240,6 +240,20 @@ function mobile_codes_process_data(&$data) {
   }
 }
 
+function mobile_codes_presets_load_all() {
+  ctools_include('export');
+  $presets = ctools_export_crud_load_all('mobile_codes_presets');
+  foreach ($presets as &$preset) {
+    if (isset($preset->disabled) && $preset->disabled) {
+      unset($preset);
+    }
+  }
+  if ($presets) {
+    ksort($presets);
+  }
+  return $presets;
+}
+
 /**
  * Theme function for displaying Mobile Codes
  */

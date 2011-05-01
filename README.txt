@@ -27,9 +27,7 @@ Features
   * Node URL block - Creates a Mobile Code of the current Node URL.
   * User vCard - Uses the vCard module to provide a vCard Mobile Code from a
     Nodes Author or a users profile.
-  * Mobile Code generator - An Admin module optimized helper block.
 * Support for:
-  * Mobile Tools module - Redirect internal Mobile Code URLs to Mobile site URL.
   * Shorten module - Shorten URLs in Mobile Codes.
 
 

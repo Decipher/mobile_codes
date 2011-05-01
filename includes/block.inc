@@ -85,11 +85,9 @@ function mobile_codes_block_node_url_configure() {
     '#options' => array(),
     '#default_value' => variable_get('mobile_codes_block_node_url_preset', 'block_node_url'),
   );
-  ctools_include('export');
-  foreach (ctools_export_crud_load_all('mobile_codes_presets') as $preset) {
-    if (isset($preset->disabled) && !$preset->disabled) {
-      $form['preset']['#options'][$preset->name] = $preset->name;
-    }
+
+  foreach (mobile_codes_presets_load_all() as $preset) {
+    $form['preset']['#options'][$preset->name] = $preset->name;
   }
 
   return $form;
@@ -112,88 +110,4 @@ function mobile_codes_block_node_url_view() {
       'content' => theme('mobilecode', array('data' => url('node/' . arg(1), array('absolute' => TRUE, 'alias' => TRUE)), 'attributes' => array('#preset' => variable_get('mobile_codes_block_node_url_preset', 'block_node_url'))))
     );
   }
-}
-
-/**
- * Code generator block view callback.
- */
-function mobile_codes_block_generate_code_view() {
-  return array(
-    'subject' => t('Mobile Code generator'),
-    'content' => drupal_get_form('mobile_codes_block_generate_code_form'),
-  );
-}
-
-/**
- * Code generator block form.
- */
-function mobile_codes_block_generate_code_form($form, &$form_state) {
-  $form = array();
-
-  if (isset($form_state['values'])) {
-    $form['mobile_code'] = array(
-      '#title' => t('Output'),
-      '#type' => 'fieldset',
-    );
-
-    $form['mobile_code']['sample'] = array(
-      '#markup' => theme('mobilecode', array('data' => $form_state['values']['text'], 'attributes' => array('#preset' => $form_state['values']['preset']))),
-    );
-
-    $form['mobile_code']['filter'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Filter'),
-      '#value' => "[mobilecode #preset='{$form_state['values']['preset']}']{$form_state['values']['text']}[/mobilecode]",
-    );
-
-    $form['mobile_code']['theme'] = array(
-      '#type' => 'textfield',
-      '#title' => t('Theme'),
-      '#value' => "theme('mobilecode', array('data' => '{$form_state['values']['text']}', 'attributes' => array('#preset' => '{$form_state['values']['preset']}')));",
-    );
-  }
-
-  $form['preset'] = array(
-    '#type' => 'select',
-    '#title' => t('Preset'),
-    '#options' => array(),
-    '#default_value' => isset($form_state['values']) ? $form_state['values']['preset'] : array(),
-  );
-  ctools_include('export');
-  foreach (ctools_export_crud_load_all('mobile_codes_presets') as $preset) {
-    if (isset($preset->disabled) && !$preset->disabled) {
-      $form['preset']['#options'][$preset->name] = $preset->name;
-    }
-  }
-
-  $form['text'] = array(
-    '#type' => 'textarea',
-    '#title' => t('Data'),
-    '#default_value' => isset($form_state['values']) ? $form_state['values']['text'] : '',
-  );
-
-  $form['generate'] = array(
-    '#type' => 'submit',
-    '#value' => t('Generate'),
-    '#ajax' => array(
-      'callback' => 'mobile_codes_block_generate_code_form_js',
-      'wrapper' => 'edit-mobile-code',
-    ),
-  );
-
-  return $form;
-}
-
-/**
- * Code generator block form AJAX callback.
- */
-function mobile_codes_block_generate_code_form_js($form, $form_state) {
-  return $form['mobile_code'];
-}
-
-/**
- * Code generator block form submit callback.
- */
-function mobile_codes_block_generate_code_form_submit($form, &$form_state) {
-  $form_state['rebuild'] = TRUE;
 }

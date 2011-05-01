@@ -43,11 +43,9 @@ function mobile_codes_block_user_vcard_configure() {
     '#options' => array(),
     '#default_value' => variable_get('mobile_codes_block_user_vcard_preset', 'block_user_vcard'),
   );
-  ctools_include('export');
-  foreach (ctools_export_crud_load_all('mobile_codes_presets') as $preset) {
-    if (isset($preset->disabled) && !$preset->disabled) {
-      $form['preset']['#options'][$preset->name] = $preset->name;
-    }
+
+  foreach (mobile_codes_presets_load_all() as $preset) {
+    $form['preset']['#options'][$preset->name] = $preset->name;
   }
 
   return $form;

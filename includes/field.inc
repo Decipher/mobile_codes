@@ -9,12 +9,18 @@
  */
 function mobile_codes_field_formatter_info() {
   $formatters = array();
-  $info = module_invoke_all('mobile_codes_field_formatter_info');
 
-  $formatters['mobile_codes'] = array(
-    'label' => t('Mobile code'),
-    'field types' => array_keys($info),
-  );
+  $presets = mobile_codes_presets_load_all();
+  if ($presets) {
+    $info = module_invoke_all('mobile_codes_field_formatter_info');
+    $formatters['mobile_codes'] = array(
+      'label' => t('Mobile code'),
+      'field types' => array_keys($info),
+      'settings' => array(
+        'mobile_codes_preset' => current(array_keys($presets)),
+      ),
+    );
+  }
 
   return $formatters;
 }
@@ -24,7 +30,16 @@ function mobile_codes_field_formatter_info() {
  */
 function mobile_codes_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
   $element = array();
-  dpm($display['type']);
+  $info = module_invoke_all('mobile_codes_field_formatter_info');
+
+  if (isset($info[$field['type']]) && isset($info[$field['type']]['callback']) && function_exists($info[$field['type']]['callback'])) {
+    foreach ($items as $delta => $item) {
+      $element[$delta] = array(
+        '#markup' => theme('mobilecode', array('data' => $info[$field['type']]['callback']($item), 'attributes' => array('#preset' => $display['settings']['mobile_codes_preset'])))
+      );
+    }
+  }
+
   return $element;
 }
 
@@ -32,13 +47,7 @@ function mobile_codes_field_formatter_view($entity_type, $entity, $field, $insta
  * Implements hook_field_formatter_settings_form().
  */
 function mobile_codes_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
-  ctools_include('export');
-  $presets = ctools_export_crud_load_all('mobile_codes_presets');
-  foreach ($presets as &$preset) {
-    if (isset($preset->disabled) && $preset->disabled) {
-      unset($preset);
-    }
-  }
+  $presets = mobile_codes_presets_load_all();
 
   $element['mobile_codes_preset'] = array(
     '#type' => 'select',
@@ -57,14 +66,7 @@ function mobile_codes_field_formatter_settings_form($field, $instance, $view_mod
  * Implements hook_field_formatter_settings_summary().
  */
 function mobile_codes_field_formatter_settings_summary($field, $instance, $view_mode) {
-  ctools_include('export');
-  $presets = ctools_export_crud_load_all('mobile_codes_presets');
-  foreach ($presets as &$preset) {
-    if (isset($preset->disabled) && $preset->disabled) {
-      unset($preset);
-    }
-  }
-
+  $presets = mobile_codes_presets_load_all();
   $preset = isset($instance['display'][$view_mode]['settings']['mobile_codes_preset']) ? $instance['display'][$view_mode]['settings']['mobile_codes_preset'] : current(array_keys($presets));
   return t('Mobile Codes preset: !preset', array('!preset' => $preset));
 }
