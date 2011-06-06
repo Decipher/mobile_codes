@@ -21,6 +21,7 @@ Features
     * Image modules.
     * Link module.
     * Text module.
+    * plus an example Custom Formatter for extended support.
   * Input filter.
   * Drupal API Theme() call.
 * Blocks:
@@ -40,6 +41,7 @@ Required modules
 Recommended modules
 --------------------------------------------------------------------------------
 
+* Custom Formatters module.
 * Libraries API module.
 
 
@@ -66,7 +68,7 @@ Advanced configuration
        e.g. sites/all/libraries/phpqrcode
 
   4. Clear cached data from the Perfomance page.
-       Administer > Site configuration > Performance
+       Administer > Configuration > Development > Performance
        http://[www.yoursite.com/path/to/drupal]/admin/config/development/performance
 
 

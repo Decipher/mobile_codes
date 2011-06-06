@@ -1,4 +1,10 @@
-Mobile Codes 7.x-2.x-dev, xxxx-xx-xx (Development release)
+Mobile Codes 7.x-2.x-dev, xxxx-xx-xx (development release)
+--------------------------------------------------------------------------------
+
+- Added Custom Formatters example.
+
+
+Mobile Codes 7.x-2.0, 2011-05-02
 --------------------------------------------------------------------------------
 
 - Initial 7.x release.

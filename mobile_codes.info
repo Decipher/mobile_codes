@@ -7,6 +7,7 @@ files[] = mobile_codes.module
 files[] = includes/admin.inc
 files[] = includes/block.inc
 files[] = includes/ctools.inc
+files[] = includes/custom_formatters.inc
 files[] = includes/features.inc
 files[] = includes/field.inc
 files[] = includes/file.inc
