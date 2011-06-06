@@ -135,7 +135,7 @@ function mobile_codes_block_generate_code_form(&$form_state) {
     $form['mobile_code']['theme'] = array(
       '#type' => 'textfield',
       '#title' => t('Theme'),
-      '#value' => "theme('mobile_code', '{$form_state['values']['text']}', array('#preset' => '{$form_state['values']['preset']}'));",
+      '#value' => "theme('mobilecode', '{$form_state['values']['text']}', array('#preset' => '{$form_state['values']['preset']}'));",
     );
   }
 
