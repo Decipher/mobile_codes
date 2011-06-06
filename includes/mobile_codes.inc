@@ -60,6 +60,12 @@ function mobile_codes_mobile_codes_token_info_alter_alter(&$data) {
     'description' => t('The web-accessible URL for the Mobile Code image.'),
     'dynamic' => TRUE,
   );
+
+  $data['tokens']['url']['mobile-codes'] = array(
+    'name' => t('Mobile Code'),
+    'description' => t('The URL as a Mobile Code'),
+    'type' => 'mobile-codes'
+  );
 }
 
 /**
@@ -67,6 +73,8 @@ function mobile_codes_mobile_codes_token_info_alter_alter(&$data) {
  */
 function mobile_codes_mobile_codes_tokens_alter_alter(&$replacements, $context) {
   $presets = mobile_codes_presets_load_all();
+
+  // Mobile Codes tokens.
   if ($context['type'] == 'mobile-codes' && !empty($context['data']['mobile-codes-data'])) {
     // [image] dynamic tokens.
     if ($image_tokens = token_find_with_prefix($context['tokens'], 'image')) {
@@ -95,6 +103,22 @@ function mobile_codes_mobile_codes_tokens_alter_alter(&$replacements, $context) 
           $replacements[$token] = file_create_url(mobile_codes_generate($request));
         }
       }
+    }
+  }
+
+  // URL tokens.
+  if ($context['type'] == 'url' && !empty($context['data']['path'])) {
+    $url = url($context['data']['path'], array('absolute' => TRUE));
+    foreach ($context['tokens'] as $name => $original) {
+      switch ($name) {
+        case 'mobile-codes':
+          $replacements[$original] = theme('mobilecode', array('data' => $url, 'attributes' => array('#preset' => key($presets))));
+          break;
+      }
+    }
+
+    if (($mobile_codes_tokens = token_find_with_prefix($context['tokens'], 'mobile-codes'))) {
+      $replacements += token_generate('mobile-codes', $mobile_codes_tokens, array('mobile-codes-data' => $url));
     }
   }
 }

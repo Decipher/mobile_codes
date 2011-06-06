@@ -22,6 +22,41 @@ function vcard_mobile_codes_default_mobile_codes_preset_alter(&$export) {
   $export['block_user_vcard'] = $preset;
 }
 
+
+/**
+ * Implements hook_mobile_codes_token_info_alter_alter() on behalf of vcard.module.
+ */
+function vcard_mobile_codes_token_info_alter_alter(&$data) {
+  $data['tokens']['user']['mobile-codes'] = array(
+    'name' => t('Mobile Code'),
+    'description' => t('The users vCard as a Mobile Code'),
+    'type' => 'mobile-codes'
+  );
+}
+
+/**
+ * Implements hook_mobile_codes_tokens_alter_alter() on behalf of vcard.module.
+ */
+function vcard_mobile_codes_tokens_alter_alter(&$replacements, $context) {
+  $presets = mobile_codes_presets_load_all();
+  if ($context['type'] == 'user' && !empty($context['data']['user'])) {
+    $vcard = vcard_get($context['data']['user']);
+    $vcard_text = $vcard->fetch();
+
+    foreach ($context['tokens'] as $name => $original) {
+      switch ($name) {
+        case 'mobile-codes':
+          $replacements[$original] = theme('mobilecode', array('data' => $vcard_text, 'attributes' => array('#preset' => key($presets))));
+          break;
+      }
+    }
+
+    if (($mobile_codes_tokens = token_find_with_prefix($context['tokens'], 'mobile-codes'))) {
+      $replacements += token_generate('mobile-codes', $mobile_codes_tokens, array('mobile-codes-data' => $vcard_text));
+    }
+  }
+}
+
 /**
  * Implements hook_mobile_codes_block_alter() on behalf of vcard.module.
  */

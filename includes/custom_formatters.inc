@@ -63,5 +63,26 @@ if (module_exists(\'vcard\')) {
 // */';
   $formatters['example_php_mobile_codes'] = $formatter;
 
+  $formatter = new stdClass;
+  $formatter->disabled = FALSE; /* Edit this to true to make a default formatter disabled initially */
+  $formatter->api_version = 2;
+  $formatter->name = 'example_token_mobile_codes';
+  $formatter->label = 'Example: Mobile Codes (HTML + Token)';
+  $formatter->description = 'A HTML + Token example formatter; Mobile Codes module.';
+  $formatter->mode = 'token';
+  $formatter->field_types = 'text';
+  $formatter->code = '<a href="[text-field-value:mobile-codes:url:large]" id="mobile_codes-zoom-demo">[text-field-value:mobile-codes:image:small]</a>
+<script>
+(function($) {
+  Drupal.behaviors.mobileCodesZoomDemo = {
+    attach: function(context) {
+      $(\'#mobile_codes-zoom-demo\').css({ position: \'relative\', display: \'inline-block\' }).append(\'<img id="mobile_codes-zoom-demo-large">\').mouseover(function() { $(\'#mobile_codes-zoom-demo-large\').show(); });;
+      $(\'#mobile_codes-zoom-demo-large\').attr(\'src\', $(\'#mobile_codes-zoom-demo\').attr(\'href\')).css({ position: \'absolute\', display: \'block\', left: \'-125px\', top: \'-125px\' }).hide().mouseout(function() { $(\'#mobile_codes-zoom-demo-large\').hide(); });
+    }
+  }
+})(jQuery);
+</script>';
+  $formatters['example_token_mobile_codes'] = $formatter;
+
   return $formatters;
 }

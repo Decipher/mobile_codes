@@ -21,8 +21,12 @@ Features
     * Image modules.
     * Link module.
     * Text module.
-    * plus an example Custom Formatter for extended support.
+    * plus example Custom Formatters for extended support.
   * Input filter.
+  * Tokens:
+    * Text field tokens.
+    * URL tokens.
+    * User vCard tokens.
   * Drupal API Theme() call.
 * Blocks:
   * Node URL block - Creates a Mobile Code of the current Node URL.
