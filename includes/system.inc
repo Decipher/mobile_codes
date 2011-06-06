@@ -21,3 +21,17 @@ function mobile_codes_theme() {
   drupal_alter('mobile_codes_theme', $items);
   return $items;
 }
+
+/**
+ * Implements hook_token_info_alter().
+ */
+function mobile_codes_token_info_alter(&$data) {
+  drupal_alter('mobile_codes_token_info_alter', $data);
+}
+
+/**
+ * Implements hook_tokens_alter().
+ */
+function mobile_codes_tokens_alter(array &$replacements, array $context) {
+  drupal_alter('mobile_codes_tokens_alter', $replacements, $context);
+}

@@ -34,6 +34,72 @@ function mobile_codes_default_mobile_codes_preset() {
 }
 
 /**
+ * Implements hook_mobile_codes_token_info_alter_alter().
+ */
+function mobile_codes_mobile_codes_token_info_alter_alter(&$data) {
+  $data['types']['mobile-codes'] = array(
+    'name' => t('Mobile Codes'),
+    'description' => t('Mobile Codes tokens.'),
+    'needs-data' => 'mobile-codes-data',
+    'field' => TRUE,
+    'module' => 'mobile_codes',
+  );
+
+  $data['tokens']['mobile-codes']['image'] = array(
+    'name' => t('Image'),
+    'description' => t('The rendered Mobile Code image.'),
+    'dynamic' => TRUE,
+  );
+  $data['tokens']['mobile-codes']['path'] = array(
+    'name' => t('Path'),
+    'description' => t('The location of the Mobile Code image relative to Drupal root.'),
+    'dynamic' => TRUE,
+  );
+  $data['tokens']['mobile-codes']['url'] = array(
+    'name' => t('URL'),
+    'description' => t('The web-accessible URL for the Mobile Code image.'),
+    'dynamic' => TRUE,
+  );
+}
+
+/**
+ * Implements hook_mobile_codes_tokens_alter_alter().
+ */
+function mobile_codes_mobile_codes_tokens_alter_alter(&$replacements, $context) {
+  $presets = mobile_codes_presets_load_all();
+  if ($context['type'] == 'mobile-codes' && !empty($context['data']['mobile-codes-data'])) {
+    // [image] dynamic tokens.
+    if ($image_tokens = token_find_with_prefix($context['tokens'], 'image')) {
+      foreach ($image_tokens as $preset => $token) {
+        if (isset($presets[$preset])) {
+          $replacements[$token] = theme('mobilecode', array('data' => $context['data']['mobile-codes-data'], 'attributes' => array('#preset' => $preset)));
+        }
+      }
+    }
+
+    // [path] dynamic tokens.
+    if ($path_tokens = token_find_with_prefix($context['tokens'], 'path')) {
+      foreach ($path_tokens as $preset => $token) {
+        if (isset($presets[$preset])) {
+          $request = mobile_codes_process_url($context['data']['mobile-codes-data'], array('#preset' => $preset));
+          $replacements[$token] = mobile_codes_generate($request);
+        }
+      }
+    }
+
+    // [url] dynamic tokens.
+    if ($url_tokens = token_find_with_prefix($context['tokens'], 'url')) {
+      foreach ($url_tokens as $preset => $token) {
+        if (isset($presets[$preset])) {
+          $request = mobile_codes_process_url($context['data']['mobile-codes-data'], array('#preset' => $preset));
+          $replacements[$token] = file_create_url(mobile_codes_generate($request));
+        }
+      }
+    }
+  }
+}
+
+/**
  * Implements hook_mobile_codes_default_mobile_codes_preset_alter().
  */
 function mobile_codes_mobile_codes_default_mobile_codes_preset_alter(&$export) {
